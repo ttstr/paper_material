@@ -1,0 +1,26 @@
+model: sasrec
+n_layers: 2
+n_heads: 2
+hidden_size: 64
+inner_size: 256
+hidden_dropout_prob: 0.2
+attn_dropout_prob: 0.2
+hidden_act: gelu
+max_seq_length: 50
+initializer_range: 0.02
+loss: ce
+full_softmax: true
+optim:
+  lr: 0.001
+  weight_decay: 0.0
+  batch_size: 256
+  epochs: 50
+  patience: 5
+  num_workers: 0
+seed: 42
+device: auto  # cuda if available else cpu
+max_users: null  # set e.g. 1000 for smoke
+debug_subset: false
+early_stop_metric: ndcg@10
+checkpoint_dir: /workspace/pcdrec/results/checkpoints
+results_dir: /workspace/pcdrec/results

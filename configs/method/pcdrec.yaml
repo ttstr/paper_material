@@ -1,0 +1,17 @@
+# Placeholder for full PCDRec (PCS + distillation). This batch uses Stage-0 SASRec only.
+method: pcdrec
+stage: 0  # 0 = SASRec CE baseline
+backbone: configs/model/sasrec.yaml
+data: configs/data/beauty.yaml
+pcs:
+  enabled: false  # TODO: Stage-1
+distill:
+  enabled: false  # TODO: Stage-2
+  lambda1: 0.1
+  lambda2: 0.1
+  beta: 1.0
+  tau: 0.1
+llm_offline:
+  enabled: false  # TODO
+online_llm_calls: 0
+notes: "Stage-0 SASRec CE baseline; PCS/distill stubs only."

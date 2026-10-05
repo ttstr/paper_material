@@ -1,0 +1,15 @@
+dataset: beauty
+raw_dir: /workspace/pcdrec-data/amazon-beauty
+manifest: /workspace/pcdrec-data/amazon-beauty/manifest.json
+processed_dir: /workspace/pcdrec/data/processed/beauty
+text_fields:
+  - title
+  - categories
+  - brand
+holdout_h: 3
+max_len: 50
+split_mode: loo
+eval:
+  Ks: [5, 10, 20]
+  full_rank: true
+  sampled100: false

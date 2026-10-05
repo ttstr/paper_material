@@ -1,0 +1,15 @@
+{
+  "n_items": 12101,
+  "max_seq_length": 50,
+  "hidden_size": 64,
+  "n_layers": 2,
+  "n_heads": 2,
+  "inner_size": 256,
+  "hidden_dropout_prob": 0.0,
+  "attn_dropout_prob": 0.0,
+  "source_checkpoint": "/workspace/pcdrec/results/checkpoints/sasrec_subset1000_best.pt",
+  "online_llm_calls": 0,
+  "has_aux_heads": false,
+  "note": "SASRec-only online export (Stage-0 stub).",
+  "n_params": 877824
+}
