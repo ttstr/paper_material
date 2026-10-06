@@ -1,0 +1,26 @@
+# Paper default teacher (plan §2.2): Qwen2.5-7B-Instruct on GPU with vLLM, JSON-schema guided decoding.
+llm:
+  backend: vllm
+  name: Qwen/Qwen2.5-7B-Instruct
+  dtype: bfloat16
+  max_model_len: 4096
+  gpu_memory_utilization: 0.9
+  batch_size: 64
+  temperature: 0.0
+  max_tokens: 512
+offline:
+  stage0_checkpoint: results/checkpoints/sasrec_full_s42_best.pt
+  holdout_h: 3
+  n_history: 20
+  max_claims: 8
+  cand_M: 20
+  n_perm: 3
+  perm_seed: 0
+  reasons_top_k: 20
+  reasons_in_perms: [0, 1, 2]
+  profile_max_tokens: 400
+  rank_max_tokens: 200
+  reason_max_tokens: 900
+  user_seed: 42
+  min_train_len: 4
+  n_users: 22363

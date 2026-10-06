@@ -73,3 +73,31 @@ def test_no_leakage_global_forbidden_union(bundle):
     # LLM cache dir (future) must not be seeded with forbidden-only lists
     with pytest.raises(AssertionError):
         assert_no_target_ids_in_llm_input(list(forbidden)[:5], forbidden, context="bad-cache")
+
+
+def test_llm_inputs_real_users_never_contain_valid_test_or_probes(bundle):
+    """End-to-end on real users: the exact prompt builders used by run_offline are leakage-free."""
+    import json as _json
+
+    import torch as _torch
+
+    from pcdrec.llm_offline.build_inputs import check_no_leakage, select_users, split_user, stage0_candidates
+    from pcdrec.llm_offline.prompts import profile_messages, rank_messages
+    from pcdrec.models.sasrec import SASRec
+
+    _torch.manual_seed(0)
+    model = SASRec(n_items=int(bundle["n_items"]), hidden_size=16, n_layers=1, n_heads=2, inner_size=32,
+                   max_seq_length=50)
+    users = select_users(bundle, 300, seed=1)
+    rows = [split_user(bundle, u, h=HOLDOUT_H, n_hist=20) for u in users]
+    stage0_candidates(model, rows, M=20, max_len=50)
+    for r in rows:
+        check_no_leakage(r)
+        prof = _json.dumps(profile_messages(r["history"], bundle["item_text"]))
+        rank = _json.dumps(rank_messages([], r["candidates"], bundle["item_text"]))
+        for f in r["forbidden"]:
+            assert f"[{f}]" not in prof and f"[{f}]" not in rank
+        for p in r["probes"]:
+            assert f"[{p}]" not in prof
+        for p in set(r["probes"][:-1]) - {r["teacher_target"]}:
+            assert f"[{p}]" not in rank

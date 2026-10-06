@@ -1,0 +1,4 @@
+pcs:
+  use_G: false
+  use_T: false
+  g_min: 0.0

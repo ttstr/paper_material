@@ -1,0 +1,28 @@
+# Any OpenAI-compatible endpoint (e.g. a vLLM server, or a hosted API if the authors allow it).
+# The key is read ONLY from the environment variable named in api_key_env.
+llm:
+  backend: openai
+  name: Qwen/Qwen2.5-7B-Instruct
+  base_url: http://localhost:8000/v1
+  api_key_env: PCDREC_LLM_API_KEY
+  allow_no_key: true       # local vLLM servers need no key
+  json_mode: true
+  batch_size: 1
+  temperature: 0.0
+  max_tokens: 512
+offline:
+  stage0_checkpoint: results/checkpoints/sasrec_full_s42_best.pt
+  holdout_h: 3
+  n_history: 20
+  max_claims: 8
+  cand_M: 20
+  n_perm: 3
+  perm_seed: 0
+  reasons_top_k: 20
+  reasons_in_perms: [0, 1, 2]
+  profile_max_tokens: 400
+  rank_max_tokens: 200
+  reason_max_tokens: 900
+  user_seed: 42
+  min_train_len: 4
+  n_users: 22363

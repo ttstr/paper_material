@@ -84,3 +84,30 @@ def test_online_export_no_llm_imports_and_param_match():
     # loadable
     loaded = torch.load(out_dir / "sasrec.pt", map_location="cpu", weights_only=False)
     ref.load_state_dict(loaded["model_state"])
+
+
+def test_student_export_drops_aux_heads(tmp_path):
+    from pcdrec.distill.student import PCDRecStudent
+    from pcdrec.export_online import export_student
+
+    torch.manual_seed(0)
+    bb = SASRec(n_items=40, hidden_size=8, n_layers=1, n_heads=2, inner_size=16, max_seq_length=6)
+    st = PCDRecStudent(bb, claim_dim=12)
+    ck = tmp_path / "student.pt"
+    torch.save({"student_state": st.state_dict(), "online_state": st.online_state_dict(), "n_items": 40, "max_len": 6,
+                "model_cfg": {"hidden_size": 8, "n_layers": 1, "n_heads": 2, "inner_size": 16}}, ck)
+    meta = export_student(str(ck), str(tmp_path / "exp"))
+    assert meta["n_params"] == bb.num_parameters() < sum(p.numel() for p in st.parameters())
+    assert set(meta["dropped_training_only_keys"]) == {"g", "pool"}
+    saved = torch.load(tmp_path / "exp/sasrec.pt", weights_only=False)["model_state"]
+    assert all(not k.startswith(("g.", "pool.", "inject.")) for k in saved)
+    imports = _collect_imports(tmp_path / "exp/online_infer.py")
+    assert not imports & {"vllm", "transformers", "sentence_transformers", "openai"}
+    assert "llm_offline" not in (tmp_path / "exp/online_infer.py").read_text()
+
+
+def test_export_module_has_no_llm_imports():
+    import pcdrec.export_online as eo
+
+    imports = _collect_imports(Path(eo.__file__))
+    assert not imports & {"vllm", "transformers", "sentence_transformers", "openai", "llm_offline", "verify"}

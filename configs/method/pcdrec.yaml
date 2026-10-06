@@ -1,17 +1,53 @@
-# Placeholder for full PCDRec (PCS + distillation). This batch uses Stage-0 SASRec only.
+# PCDRec: PCS-verified alignment distillation into SASRec (plan §2.3-§2.4, §7.3).
+# Every component is switchable for the ablations (A1-A6); see configs/ablation/*.yaml.
 method: pcdrec
-stage: 0  # 0 = SASRec CE baseline
-backbone: configs/model/sasrec.yaml
-data: configs/data/beauty.yaml
+ref_checkpoint: results/checkpoints/sasrec_full_s42_best.pt   # Stage-0 SASRec = theta_ref (frozen)
+init_from_ref: true          # student initialised from theta_ref (false = from scratch)
+text_encoder: sentence-transformers/all-MiniLM-L6-v2           # frozen; shared with SASRec-T
+seed: 42
+threads: 3
+aux_batch_size: 32           # teacher users per auxiliary step
+aux_every: 1                 # auxiliary losses every k L_rec steps
+verify:
+  nli_model: cross-encoder/nli-deberta-v3-xsmall
+  n_neg: 30                  # popularity-bucket negatives for T
+  pop_buckets: 10
+  seed: 0
 pcs:
-  enabled: false  # TODO: Stage-1
-distill:
-  enabled: false  # TODO: Stage-2
-  lambda1: 0.1
-  lambda2: 0.1
+  enabled: true              # false -> w_u = 1 for all users (Naive-Distill, A1)
+  use_G: true                # A2 switches
+  use_T: true
+  use_R: true
+  alpha: 1.0
+  beta: 1.0
+  gamma: 1.0
+  theta: 0.25                # w_u = sigmoid((PCS_u - theta) / T_w); select on valid
+  T_w: 0.1
+  g_min: 0.05                # hard filter: G_u < g_min -> no teacher signal
+neg:
+  n1: true                   # cross-user swap (A3 switches)
+  n2: true                   # polarity flip
+  n3: true                   # broken evidence
+  n3_scale: 1.0
+  in_batch: true
+loss:
+  lambda1: 0.1               # L_align weight (0 disables, A4)
+  lambda2: 0.1               # L_pref weight (0 disables, A4)
+  align_type: sdpo           # sdpo | listkl | bpr | none  (A5)
+  use_ref: true              # Delta = s_theta - s_ref (A5: false = no reference model)
   beta: 1.0
   tau: 0.1
-llm_offline:
-  enabled: false  # TODO
+  tau_T: 2.0
+  tau_S: 1.0
+  m_neg: 5
+  align_gt_max_rank: 10      # j+ = GT only if its Borda teacher rank < this
+inject:
+  enabled: false             # A6: feature injection (reads cached profiles online; NOT zero-dependency)
+optim:
+  lr: 0.0005
+  batch_size: 256
+  epochs: 20
+  patience: 3
+checkpoint_dir: results/checkpoints
+results_dir: results
 online_llm_calls: 0
-notes: "Stage-0 SASRec CE baseline; PCS/distill stubs only."

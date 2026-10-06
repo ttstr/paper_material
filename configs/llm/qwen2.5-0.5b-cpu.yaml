@@ -1,0 +1,26 @@
+# Smallest CPU model (fast smoke runs; drops evidence ids often - see results/pilot).
+llm:
+  backend: transformers
+  name: Qwen/Qwen2.5-0.5B-Instruct
+  dtype: bfloat16          # CPU with AMX-BF16; float32 also works (slower)
+  device: cpu
+  threads: 2
+  batch_size: 4            # left-padded greedy batching
+  temperature: 0.0
+  max_tokens: 400
+offline:
+  stage0_checkpoint: results/checkpoints/sasrec_full_s42_best.pt
+  holdout_h: 3             # probes = last 3 train items, never shown to the profile LLM
+  n_history: 20            # last n prefix items in the profile prompt
+  max_claims: 8            # K
+  cand_M: 20               # teacher candidates (Stage-0 top-M, GT inserted)
+  n_perm: 3                # P random permutations
+  perm_seed: 0
+  reasons_top_k: 3         # candidate rationales requested for the top-k items ...
+  reasons_in_perms: [0]    # ... in permutation 0 only (CPU budget; full plan: all candidates)
+  profile_max_tokens: 320
+  rank_max_tokens: 160
+  reason_max_tokens: 200
+  user_seed: 42
+  min_train_len: 6
+  n_users: 60
