@@ -1,0 +1,74 @@
+{
+  "SASRec-T": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "mean_diff": 0.002708579595491472,
+    "rel_diff_pct": 6.604270604094,
+    "wilcoxon_p": 6.974464705608e-05,
+    "ttest_user_p": 5.149354406722501e-09,
+    "ttest_seed_p": 0.00013861926984204596,
+    "n_users": 22363,
+    "users_better": 1870,
+    "users_worse": 1841,
+    "wilcoxon_p_holm": 6.974464705608e-05
+  },
+  "GRU4Rec": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "mean_diff": -0.006305495493402164,
+    "rel_diff_pct": -15.374552256333802,
+    "wilcoxon_p": 1.6423745932920828e-25,
+    "ttest_user_p": 5.902739217283125e-26,
+    "ttest_seed_p": 0.00014938333036533934,
+    "n_users": 22363,
+    "users_better": 1455,
+    "users_worse": 2081,
+    "wilcoxon_p_holm": 3.2847491865841656e-25
+  },
+  "BERT4Rec": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "mean_diff": -0.013654540496697969,
+    "rel_diff_pct": -33.293568542293706,
+    "wilcoxon_p": 2.0748908311233773e-79,
+    "ttest_user_p": 1.0248840484460321e-83,
+    "ttest_seed_p": 1.5982137540736333e-06,
+    "n_users": 22363,
+    "users_better": 1316,
+    "users_worse": 2313,
+    "wilcoxon_p_holm": 6.224672493370132e-79
+  },
+  "MF-BPR": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "mean_diff": -0.035794399072098124,
+    "rel_diff_pct": -87.27670324939191,
+    "wilcoxon_p": 0.0,
+    "ttest_user_p": 0.0,
+    "ttest_seed_p": 5.7182993781296596e-09,
+    "n_users": 22363,
+    "users_better": 408,
+    "users_worse": 2883,
+    "wilcoxon_p_holm": 0.0
+  }
+}
