@@ -1,18 +1,46 @@
+# --- environment ---
 .venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
+.env
+.env.*
+*.pem
+*.key
+.DS_Store
+
+# --- data: never commit raw / processed data (user-provided Beauty LOO) ---
 data/processed/
 data/raw/
+**/amazon-beauty/
+train.txt
+valid.txt
+test.txt
+item_meta.txt
+*.tsv
+*.pkl
+*.parquet
+
+# --- model artifacts ---
 results/checkpoints/
-results/*.json
-results/*.csv
-!results/.gitkeep
 *.pt
 *.pth
 *.ckpt
-.env
+results/online_export/
+results/online_export_test/
+results/eval_*.json
+
+# --- results: ignore by default, whitelist the script-generated main-table evidence ---
+results/*.json
+results/*.csv
+!results/.gitkeep
+!results/main_table_sasrec_full.csv
+!results/sasrec_full_s*_metrics.json
+!results/sasrec_full_s*_metrics.csv
+
+# --- logs: ignore by default, keep only the small per-seed full-run training logs ---
 *.log
-.DS_Store
+logs/*
+!logs/sasrec_full_s*.log

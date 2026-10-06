@@ -18,6 +18,11 @@ ARGS=(
   --tag "$TAG"
   --skip-process
 )
+# optional overrides (written into results json "config")
+[[ -n "${SEED:-}" ]] && ARGS+=(--seed "$SEED")
+[[ -n "${PATIENCE:-}" ]] && ARGS+=(--patience "$PATIENCE")
+[[ -n "${THREADS:-}" ]] && ARGS+=(--threads "$THREADS")
+[[ -n "${LR:-}" ]] && ARGS+=(--lr "$LR")
 
 if [[ "${FULL:-0}" == "1" ]]; then
   echo "Training SASRec FULL users: epochs=$EPOCHS batch=$BATCH"

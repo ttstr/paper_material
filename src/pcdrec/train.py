@@ -146,6 +146,9 @@ def train_main(argv: list[str] | None = None) -> dict:
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--device", default=None)
     ap.add_argument("--tag", default="sasrec")
+    ap.add_argument("--patience", type=int, default=None, help="Early-stop patience on valid NDCG@10")
+    ap.add_argument("--lr", type=float, default=None)
+    ap.add_argument("--threads", type=int, default=None, help="torch.set_num_threads (CPU)")
     ap.add_argument("--skip-process", action="store_true", help="Use existing processed pickle")
     args = ap.parse_args(argv)
 
@@ -160,6 +163,14 @@ def train_main(argv: list[str] | None = None) -> dict:
         cfg["seed"] = args.seed
     if args.device is not None:
         cfg["device"] = args.device
+    if args.patience is not None:
+        cfg["optim"]["patience"] = args.patience
+    if args.lr is not None:
+        cfg["optim"]["lr"] = args.lr
+    if args.threads is not None:
+        cfg["threads"] = args.threads
+    if cfg.get("threads"):
+        torch.set_num_threads(int(cfg["threads"]))
 
     set_seed(int(cfg["seed"]))
     device = resolve_device(str(cfg.get("device", "auto")))
@@ -218,23 +229,26 @@ def train_main(argv: list[str] | None = None) -> dict:
 
     epochs = int(cfg["optim"]["epochs"])
     for epoch in range(1, epochs + 1):
+        t_ep = time.time()
         model.train()
         losses = []
         for seq_in, seq_tgt in tqdm(loader, desc=f"epoch {epoch}", leave=False):
             seq_in = seq_in.to(device)
             seq_tgt = seq_tgt.to(device)
-            logits = model.train_step_logits(seq_in)  # [B, L, n_items]
-            B, L, N = logits.shape
-            loss = F.cross_entropy(
-                logits.reshape(B * L, N),
-                seq_tgt.reshape(B * L),
-                ignore_index=-100,
-            )
+            # Only compute full-catalog logits at non-ignored (non-pad) positions.
+            # Identical to CE(ignore_index=-100, reduction=mean) over [B*L], but avoids
+            # materialising [B, L, n_items] for mostly-padded short Beauty sequences.
+            h = model(seq_in)  # [B, L, H]
+            valid_pos = seq_tgt.ne(-100)
+            h_valid = h[valid_pos]  # [M, H]
+            logits = h_valid @ model.item_emb.weight[:-1].t()  # [M, n_items]
+            loss = F.cross_entropy(logits, seq_tgt[valid_pos])
             optim.zero_grad()
             loss.backward()
             optim.step()
             losses.append(loss.item())
 
+        t_train = time.time() - t_ep
         valid_metrics = evaluate_split(
             model,
             bundle["train_seq"],
@@ -245,16 +259,20 @@ def train_main(argv: list[str] | None = None) -> dict:
             batch_size=min(128, int(cfg["optim"]["batch_size"])),
             history_mode="train",
         )
+        t_epoch = time.time() - t_ep
         row = {
             "epoch": epoch,
             "train_loss": float(np.mean(losses)) if losses else None,
+            "train_sec": t_train,
+            "epoch_sec": t_epoch,
             **{f"valid_{k}": v for k, v in valid_metrics.items()},
         }
         history.append(row)
         metric = valid_metrics["ndcg@10"]
         print(
             f"epoch={epoch} loss={row['train_loss']:.4f} "
-            f"valid_ndcg@10={metric:.6f} valid_hr@10={valid_metrics['hr@10']:.6f}",
+            f"valid_ndcg@10={metric:.6f} valid_hr@10={valid_metrics['hr@10']:.6f} "
+            f"train_sec={t_train:.1f} epoch_sec={t_epoch:.1f} total_sec={time.time() - t0:.0f}",
             flush=True,
         )
 
@@ -281,6 +299,8 @@ def train_main(argv: list[str] | None = None) -> dict:
                 break
 
     elapsed = time.time() - t0
+    epochs_run = len(history)
+    stopped_early = epochs_run < epochs
 
     # reload best and evaluate valid+test
     ckpt = torch.load(best_path, map_location=device, weights_only=False)
@@ -311,6 +331,10 @@ def train_main(argv: list[str] | None = None) -> dict:
         "valid": valid_metrics,
         "test": test_metrics,
         "elapsed_sec": elapsed,
+        "epochs_run": epochs_run,
+        "stopped_early": stopped_early,
+        "mean_epoch_sec": float(np.mean([r["epoch_sec"] for r in history])) if history else None,
+        "torch_threads": torch.get_num_threads(),
         "checkpoint": str(best_path),
         "seed": cfg["seed"],
         "config": {
@@ -323,6 +347,15 @@ def train_main(argv: list[str] | None = None) -> dict:
             "n_heads": cfg["n_heads"],
             "hidden_size": cfg["hidden_size"],
             "max_seq_length": max_len,
+            "inner_size": int(cfg.get("inner_size", cfg["hidden_size"] * 4)),
+            "lr": float(cfg["optim"]["lr"]),
+            "weight_decay": float(cfg["optim"].get("weight_decay", 0.0)),
+            "patience": patience,
+            "early_stop_metric": "valid ndcg@10",
+            "hidden_dropout_prob": float(cfg["hidden_dropout_prob"]),
+            "attn_dropout_prob": float(cfg["attn_dropout_prob"]),
+            "threads": torch.get_num_threads(),
+            "eval": "full-catalog ranking, history items NOT filtered; valid uses train history, test uses train+valid history",
         },
         "history": history,
         "note": "Metrics written by train.py; do not hand-edit.",

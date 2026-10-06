@@ -73,19 +73,52 @@ python -m pcdrec.export_online \
   --out-dir results/online_export
 ```
 
-### 全量训练（待跑 / TODO）
-
-无 GPU 时全量 22363 用户 + 全库 softmax 很慢，**尚未作为主表结果提交**。有算力时：
+### 全量训练（CPU，5 seeds）
 
 ```bash
-FULL=1 EPOCHS=50 BATCH=256 TAG=sasrec_full bash scripts/04_train_sasrec.sh
+# 单个 seed（CPU 上 4 线程最快：~23 s/epoch；8 线程反而更慢 ~35 s/epoch）
+TQDM_DISABLE=1 FULL=1 EPOCHS=200 PATIENCE=20 BATCH=256 THREADS=4 SEED=42 TAG=sasrec_full_s42 \
+  bash scripts/04_train_sasrec.sh > logs/sasrec_full_s42.log 2>&1
+
+# 其余 seeds：2 条队列并行，各 3 线程（~26 s/epoch/进程，RSS ~0.9 GB/进程）
+THREADS=3 nohup bash scripts/run_sasrec_full_seeds.sh 43 45 > logs/queue_a.log 2>&1 &
+THREADS=3 nohup bash scripts/run_sasrec_full_seeds.sh 44 46 > logs/queue_b.log 2>&1 &
+
+# 汇总（只读 results/sasrec_full_s*_metrics.json，数字全部由脚本产出）
+python scripts/06_tables.py
 ```
 
-主表 Beauty HR@10 / NDCG@10：**待跑**（勿手填）。
+`04_train_sasrec.sh` 新增可选环境变量：`SEED` / `PATIENCE` / `THREADS` / `LR`（对应 `train.py` 的 `--seed/--patience/--threads/--lr`），全部写入结果 JSON 的 `config`。
+每个 epoch 的 `train_sec/epoch_sec` 记录在 JSON `history` 中。
+
+## 当前结果
+
+**主表（SASRec-CE 基线，Beauty LOO 全量 22363 用户，全库 12101 物品排序，不过滤历史物品；CPU、无 GPU；5 seeds = 42–46，mean ± std）**：
+
+- `results/main_table_sasrec_full.md`（可读表）
+- `results/main_table_sasrec_full.csv`（每 seed 一行 + mean / std 行）
+- 由 `scripts/06_tables.py` 从 `results/sasrec_full_s{42..46}_metrics.json` 自动生成；**README 不抄录数字，以表为准**。
+- 训练日志：`logs/sasrec_full_s*.log`；checkpoint：`results/checkpoints/sasrec_full_s*_best.pt`（checkpoint 不入库）
+- 硬件：8 核 CPU、~15 GB 内存、无 GPU（torch CPU）；seed 42 单独跑（4 线程），43–46 两进程并行（各 3 线程）。每 epoch 耗时、每 seed 耗时与总耗时同样由脚本写入汇总表。
+- 重新生成：`python scripts/06_tables.py`
+
+### 全量结果量级核查（排查记录）
+
+seed=42 首次全量即落在公开 SASRec-CE（Beauty 5-core LOO、全库排序）报告的量级内（公开参考：phonism/genrec README SASRec(CE) N@10≈0.042 / R@10≈0.085；genrec 文档 N@10≈0.0375 / R@10≈0.069；sota2 汇总的 SASRec-SCE LOO N@10≈0.054），**因此未对模型 / 评测做数值性修正**。仍逐项核对了常见问题：
+
+| 检查项 | 结论 |
+|---|---|
+| padding mask | 左 padding，`pad_id=n_items`；attention 屏蔽 pad key + 未来位置（causal）；pad 位置输出置零；loss `ignore_index` 忽略 pad 目标 |
+| 位置编码 | 可学习 `pos_emb(L)`，左 padding 下最近物品恒在位置 L-1；用户表示取最右非 pad 位置 |
+| 评测排除 padding item | 打分只用 `item_emb.weight[:-1]`（12101 个真实物品），pad 不参与排序 |
+| 历史物品过滤 | **不过滤**（保持协议不变）；valid 用 train 历史，test 用 train+valid 历史 |
+| 学习率 / dropout | Adam lr=1e-3、dropout 0.2（与 SASRec/RecBole/genrec 常用设置一致），收敛曲线正常（valid NDCG@10 先升后平/缓降，patience=20 早停；各 seed 的 best_epoch / epochs_run 见汇总表） |
+
+唯一的代码改动是**效率**而非数值：训练时只在非 pad 位置计算全库 logits（`h[valid] @ E^T` + CE），与原先 `[B, L, n_items]` 上 `CE(ignore_index=-100, mean)` 数学等价，避免为大量 pad 位置分配 ~0.6 GB 的 logits。早停 patience 由 5 改为 20（写入 `configs/model/sasrec.yaml` 与结果 JSON），epoch 上限 200。
 
 ## 默认超参（SASRec CE）
 
-2 layers，2 heads，`d=64`，`max_len=50`，dropout 0.2，全库 softmax CE，早停看 valid **NDCG@10**，seed=42。
+2 layers，2 heads，`d=64`，`max_len=50`，dropout 0.2，全库 softmax CE，Adam lr=1e-3，batch 256，epoch 上限 200，早停看 valid **NDCG@10**（patience=20），seed=42（主表另跑 43–46）。
 
 ## 验收状态（本批）
 
@@ -94,7 +127,7 @@ FULL=1 EPOCHS=50 BATCH=256 TAG=sasrec_full bash scripts/04_train_sasrec.sh
 | 数据 sha256/行数/LOO 不变量 | 通过（`01_load_splits` + pytest） |
 | `test_split` / `test_no_leakage` / `test_metrics` / `test_online_no_llm` | 通过（11 passed） |
 | SASRec CE smoke 可训可评 | 通过（CPU，`max_users=1000`） |
-| 全量主表 | **待跑 / TODO** |
+| 全量主表（SASRec-CE，CPU，5 seeds） | 已跑，见 `results/main_table_sasrec_full.md` |
 | LLM 离线 / PCS / 蒸馏 | **未实现**（目录 stub） |
 
 Smoke 真实指标见脚本产物（勿手改）：
@@ -111,4 +144,6 @@ Smoke 真实指标见脚本产物（勿手改）：
 ## 结果纪律
 
 - 只信任 `results/*.json` / `*.csv` 中由 `train.py` / `evaluate.py` 写出的数字
-- README **不编造**指标；全量结果标「待跑」
+- README **不编造 / 不抄录**指标；全量主表以 `scripts/06_tables.py` 产出的表为准
+- 入库的结果证据仅限：`results/main_table_sasrec_full.{md,csv}`、`results/sasrec_full_s*_metrics.{json,csv}`、`logs/sasrec_full_s*.log`
+- 不入库（见 `.gitignore`）：原始 TSV / `data/raw`（符号链接）/ `data/processed`、所有 checkpoint（`*.pt`）、`results/online_export*`、`.venv`、其它日志
