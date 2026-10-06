@@ -1,0 +1,18 @@
+{
+  "export_dir": "results/pilot/online_export",
+  "online_llm_calls": 0,
+  "state_dict_keys": 36,
+  "n_params": 877824,
+  "dropped_training_only_modules": [
+    "g",
+    "pool"
+  ],
+  "llm_modules_imported_during_check": [],
+  "export_test_ndcg@10": 0.04052820891929213,
+  "export_test_hr@10": 0.07619729016679336,
+  "latency_ms_batch1_1thread_p50": 0.9053409958141856,
+  "latency_ms_batch1_1thread_p95": 1.072560841566883,
+  "latency_n_requests": 2000,
+  "student_test_ndcg@10": 0.04052820891929213,
+  "export_matches_student": true
+}

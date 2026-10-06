@@ -1,0 +1,156 @@
+{
+  "tag": "pcdrec_pilot_s42",
+  "method": "pcdrec_student",
+  "llm_dir": "results/pilot/llm_qwen1.5b",
+  "n_teacher_users": 60,
+  "best_epoch": 0,
+  "epochs_run": 3,
+  "valid": {
+    "hr@5": 0.06819299736171354,
+    "ndcg@5": 0.04140034693116303,
+    "hr@10": 0.09998658498412556,
+    "ndcg@10": 0.051665241898963,
+    "hr@20": 0.13763806287170774,
+    "ndcg@20": 0.0611141773028308,
+    "n": 22363.0,
+    "mean_rank": 2554.670393059965
+  },
+  "test": {
+    "hr@5": 0.050753476724947455,
+    "ndcg@5": 0.032360548863660486,
+    "hr@10": 0.07619729016679336,
+    "ndcg@10": 0.04052820891929213,
+    "hr@20": 0.11107633144032554,
+    "ndcg@20": 0.049328529532686224,
+    "n": 22363.0,
+    "mean_rank": 2833.7617940347895
+  },
+  "teacher_users_subset": {
+    "valid": {
+      "n": 60,
+      "ndcg@10": 0.0846399726868188,
+      "hr@10": 0.18333333333333332
+    },
+    "test": {
+      "n": 60,
+      "ndcg@10": 0.061840075362731874,
+      "hr@10": 0.1
+    }
+  },
+  "init_valid_ndcg@10": 0.051665241898963,
+  "elapsed_sec": 113.1364119052887,
+  "seed": 42,
+  "n_params_online": 877824,
+  "n_params_train_total": 1054784,
+  "config": {
+    "method": "pcdrec",
+    "ref_checkpoint": "results/checkpoints/sasrec_full_s42_best.pt",
+    "init_from_ref": true,
+    "text_encoder": "sentence-transformers/all-MiniLM-L6-v2",
+    "seed": 42,
+    "threads": 3,
+    "aux_batch_size": 32,
+    "aux_every": 1,
+    "verify": {
+      "nli_model": "cross-encoder/nli-deberta-v3-xsmall",
+      "n_neg": 30,
+      "pop_buckets": 10,
+      "seed": 0
+    },
+    "pcs": {
+      "enabled": true,
+      "use_G": true,
+      "use_T": true,
+      "use_R": true,
+      "alpha": 1.0,
+      "beta": 1.0,
+      "gamma": 1.0,
+      "theta": 0.25,
+      "T_w": 0.1,
+      "g_min": 0.05
+    },
+    "neg": {
+      "n1": true,
+      "n2": true,
+      "n3": true,
+      "n3_scale": 1.0,
+      "in_batch": true
+    },
+    "loss": {
+      "lambda1": 0.1,
+      "lambda2": 0.1,
+      "align_type": "sdpo",
+      "use_ref": true,
+      "beta": 1.0,
+      "tau": 0.1,
+      "tau_T": 2.0,
+      "tau_S": 1.0,
+      "m_neg": 5,
+      "align_gt_max_rank": 10
+    },
+    "inject": {
+      "enabled": false
+    },
+    "optim": {
+      "lr": 0.0005,
+      "batch_size": 256,
+      "epochs": 20,
+      "patience": 3
+    },
+    "checkpoint_dir": "results/checkpoints",
+    "results_dir": "results",
+    "online_llm_calls": 0
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "loss_rec": 6.060339943929152,
+      "loss_align": 0.2020720972213894,
+      "loss_pref": 1.700124743309888,
+      "aux_steps": 88,
+      "epoch_sec": 36.37912344932556,
+      "valid_hr@5": 0.06564414434557081,
+      "valid_ndcg@5": 0.0398203552022166,
+      "valid_hr@10": 0.09877923355542638,
+      "valid_ndcg@10": 0.05054249876225823,
+      "valid_hr@20": 0.13634127800384563,
+      "valid_ndcg@20": 0.05999039471661183,
+      "valid_n": 22363.0,
+      "valid_mean_rank": 2584.0012073514285
+    },
+    {
+      "epoch": 2,
+      "loss_rec": 5.980277852578596,
+      "loss_align": 0.03700771365865049,
+      "loss_pref": 0.9300312589515339,
+      "aux_steps": 88,
+      "epoch_sec": 36.06157207489014,
+      "valid_hr@5": 0.06653847873719984,
+      "valid_ndcg@5": 0.04080700853285377,
+      "valid_hr@10": 0.0994052676295667,
+      "valid_ndcg@10": 0.051394447783221824,
+      "valid_hr@20": 0.13745919599338194,
+      "valid_ndcg@20": 0.06096381756552406,
+      "valid_n": 22363.0,
+      "valid_mean_rank": 2585.9969145463488
+    },
+    {
+      "epoch": 3,
+      "loss_rec": 5.931281507015228,
+      "loss_align": 0.022483683318238367,
+      "loss_pref": 0.8032823313366283,
+      "aux_steps": 88,
+      "epoch_sec": 36.4720344543457,
+      "valid_hr@5": 0.06680677905468854,
+      "valid_ndcg@5": 0.04050338579169987,
+      "valid_hr@10": 0.09918168403165943,
+      "valid_ndcg@10": 0.05098178368176185,
+      "valid_hr@20": 0.13826409694584804,
+      "valid_ndcg@20": 0.06079517172256712,
+      "valid_n": 22363.0,
+      "valid_mean_rank": 2584.835174171623
+    }
+  ],
+  "checkpoint": "results/checkpoints/pcdrec_pilot_s42_best.pt",
+  "note": "written by pcdrec.distill.train_student; do not hand-edit"
+}

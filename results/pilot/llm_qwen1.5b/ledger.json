@@ -1,0 +1,36 @@
+{
+  "calls": 240,
+  "by_stage": {
+    "profile": {
+      "calls": 60,
+      "prompt_tokens": 37293,
+      "completion_tokens": 10840,
+      "seconds": 1345.96169257164,
+      "parse_ok": 60,
+      "sec_per_call": 22.432694876194,
+      "completion_tok_per_sec": 8.053721038143907,
+      "total_tok_per_sec": 35.76104748422331,
+      "parse_rate": 1.0
+    },
+    "rank": {
+      "calls": 180,
+      "prompt_tokens": 201099,
+      "completion_tokens": 23243,
+      "seconds": 2667.598129749298,
+      "parse_ok": 174,
+      "sec_per_call": 14.819989609718323,
+      "completion_tok_per_sec": 8.713081532331254,
+      "total_tok_per_sec": 84.09887437621039,
+      "parse_rate": 0.9666666666666667
+    }
+  },
+  "prompt_tokens": 238392,
+  "completion_tokens": 34083,
+  "seconds": 4013.559822320938,
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "backend": "transformers",
+  "dtype": "bfloat16",
+  "threads": 2,
+  "batch_size": 4,
+  "n_users": 60
+}

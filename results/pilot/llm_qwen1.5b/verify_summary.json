@@ -1,0 +1,82 @@
+{
+  "n_users": 60,
+  "nli_model": "cross-encoder/nli-deberta-v3-xsmall",
+  "text_encoder": "sentence-transformers/all-MiniLM-L6-v2",
+  "claims_per_user": {
+    "mean": 3.816666666666667,
+    "n": 60
+  },
+  "G": {
+    "mean": 0.09076356498679863,
+    "n": 60
+  },
+  "halluc_evidence_rate": {
+    "mean": 0.0,
+    "n": 60
+  },
+  "no_evidence_rate": {
+    "mean": 0.15371031746031746,
+    "n": 60
+  },
+  "grounded_claim_rate": {
+    "mean": 0.039444444444444435,
+    "n": 60
+  },
+  "T_auc": {
+    "mean": 0.6081481481481482,
+    "n": 60
+  },
+  "R": {
+    "mean": 0.5448538011695906,
+    "n": 60
+  },
+  "kendall_tau": {
+    "mean": 0.08970760233918128,
+    "n": 60
+  },
+  "position_bias_tau": {
+    "mean": 0.5871345029239767,
+    "n": 60
+  },
+  "F": {
+    "mean": 0.10279300624899132,
+    "n": 58
+  },
+  "reason_cite_valid_rate": {
+    "mean": 0.9339080459770116,
+    "n": 58
+  },
+  "PCS": {
+    "mean": 0.02855882394021717,
+    "n": 60
+  },
+  "w": {
+    "mean": 0.057761629358333504,
+    "n": 60
+  },
+  "users_hard_filtered(w=0)": 34,
+  "teacher_gt_rank_mean(0=top)": {
+    "mean": 9.966666666666667,
+    "n": 60
+  },
+  "teacher_gt_top1_rate": 0.03333333333333333,
+  "teacher_gt_top5_rate": 0.25,
+  "align_eligible_users": 26,
+  "profile_parse_rate": 1.0,
+  "profile_salvaged_rate": 0.5666666666666667,
+  "rank_parse_rate": 1.0,
+  "rank_missing_appended_mean": 7.711111111111111,
+  "pcs_cfg": {
+    "enabled": true,
+    "use_G": true,
+    "use_T": true,
+    "use_R": true,
+    "alpha": 1.0,
+    "beta": 1.0,
+    "gamma": 1.0,
+    "theta": 0.25,
+    "T_w": 0.1,
+    "g_min": 0.05
+  },
+  "elapsed_sec": 32.58199119567871
+}

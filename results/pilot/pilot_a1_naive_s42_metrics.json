@@ -1,0 +1,156 @@
+{
+  "tag": "pilot_a1_naive_s42",
+  "method": "pcdrec_student",
+  "llm_dir": "results/pilot/llm_qwen1.5b",
+  "n_teacher_users": 60,
+  "best_epoch": 0,
+  "epochs_run": 3,
+  "valid": {
+    "hr@5": 0.06819299736171354,
+    "ndcg@5": 0.04140034693116303,
+    "hr@10": 0.09998658498412556,
+    "ndcg@10": 0.051665241898963,
+    "hr@20": 0.13763806287170774,
+    "ndcg@20": 0.0611141773028308,
+    "n": 22363.0,
+    "mean_rank": 2554.670393059965
+  },
+  "test": {
+    "hr@5": 0.050753476724947455,
+    "ndcg@5": 0.032360548863660486,
+    "hr@10": 0.07619729016679336,
+    "ndcg@10": 0.04052820891929213,
+    "hr@20": 0.11107633144032554,
+    "ndcg@20": 0.049328529532686224,
+    "n": 22363.0,
+    "mean_rank": 2833.7617940347895
+  },
+  "teacher_users_subset": {
+    "valid": {
+      "n": 60,
+      "ndcg@10": 0.0846399726868188,
+      "hr@10": 0.18333333333333332
+    },
+    "test": {
+      "n": 60,
+      "ndcg@10": 0.061840075362731874,
+      "hr@10": 0.1
+    }
+  },
+  "init_valid_ndcg@10": 0.051665241898963,
+  "elapsed_sec": 115.50055360794067,
+  "seed": 42,
+  "n_params_online": 877824,
+  "n_params_train_total": 1054784,
+  "config": {
+    "method": "pcdrec",
+    "ref_checkpoint": "results/checkpoints/sasrec_full_s42_best.pt",
+    "init_from_ref": true,
+    "text_encoder": "sentence-transformers/all-MiniLM-L6-v2",
+    "seed": 42,
+    "threads": 3,
+    "aux_batch_size": 32,
+    "aux_every": 1,
+    "verify": {
+      "nli_model": "cross-encoder/nli-deberta-v3-xsmall",
+      "n_neg": 30,
+      "pop_buckets": 10,
+      "seed": 0
+    },
+    "pcs": {
+      "enabled": false,
+      "use_G": true,
+      "use_T": true,
+      "use_R": true,
+      "alpha": 1.0,
+      "beta": 1.0,
+      "gamma": 1.0,
+      "theta": 0.25,
+      "T_w": 0.1,
+      "g_min": 0.05
+    },
+    "neg": {
+      "n1": true,
+      "n2": true,
+      "n3": true,
+      "n3_scale": 1.0,
+      "in_batch": true
+    },
+    "loss": {
+      "lambda1": 0.1,
+      "lambda2": 0.1,
+      "align_type": "sdpo",
+      "use_ref": true,
+      "beta": 1.0,
+      "tau": 0.1,
+      "tau_T": 2.0,
+      "tau_S": 1.0,
+      "m_neg": 5,
+      "align_gt_max_rank": 10
+    },
+    "inject": {
+      "enabled": false
+    },
+    "optim": {
+      "lr": 0.0005,
+      "batch_size": 256,
+      "epochs": 20,
+      "patience": 3
+    },
+    "checkpoint_dir": "results/checkpoints",
+    "results_dir": "results",
+    "online_llm_calls": 0
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "loss_rec": 6.063009825619784,
+      "loss_align": 0.3149107852950692,
+      "loss_pref": 2.4715894122015345,
+      "aux_steps": 88,
+      "epoch_sec": 36.58057761192322,
+      "valid_hr@5": 0.06582301122389661,
+      "valid_ndcg@5": 0.040175474980353926,
+      "valid_hr@10": 0.0979296158833788,
+      "valid_ndcg@10": 0.050551680456336893,
+      "valid_hr@20": 0.13589411080803113,
+      "valid_ndcg@20": 0.060102761253592665,
+      "valid_n": 22363.0,
+      "valid_mean_rank": 2586.741760944417
+    },
+    {
+      "epoch": 2,
+      "loss_rec": 5.977830599654805,
+      "loss_align": 0.06976496453650972,
+      "loss_pref": 1.274451251734387,
+      "aux_steps": 88,
+      "epoch_sec": 37.31994104385376,
+      "valid_hr@5": 0.06738809640924742,
+      "valid_ndcg@5": 0.040813719380005595,
+      "valid_hr@10": 0.09994186826454411,
+      "valid_ndcg@10": 0.05133631180200572,
+      "valid_hr@20": 0.1367437284800787,
+      "valid_ndcg@20": 0.060601489974401214,
+      "valid_n": 22363.0,
+      "valid_mean_rank": 2593.314850422573
+    },
+    {
+      "epoch": 3,
+      "loss_rec": 5.933103003285148,
+      "loss_align": 0.04459688842127269,
+      "loss_pref": 0.9652588658712127,
+      "aux_steps": 88,
+      "epoch_sec": 36.365899324417114,
+      "valid_hr@5": 0.06770111344631757,
+      "valid_ndcg@5": 0.04108069360225817,
+      "valid_hr@10": 0.09851093323793766,
+      "valid_ndcg@10": 0.051080157396971346,
+      "valid_hr@20": 0.13589411080803113,
+      "valid_ndcg@20": 0.060480236539105836,
+      "valid_n": 22363.0,
+      "valid_mean_rank": 2588.352859634217
+    }
+  ],
+  "checkpoint": "results/checkpoints/pilot_a1_naive_s42_best.pt",
+  "note": "written by pcdrec.distill.train_student; do not hand-edit"
+}

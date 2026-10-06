@@ -1,0 +1,12 @@
+[2026-10-06 21:03:10] llm generation finished
+[2026-10-06 21:03:12] replay done
+   240 results/pilot/llm_qwen1.5b/calls.jsonl
+    60 results/pilot/llm_qwen1.5b/inputs.jsonl
+    60 results/pilot/llm_qwen1.5b/profiles.jsonl
+   180 results/pilot/llm_qwen1.5b/rankings.jsonl
+   540 total
+[2026-10-06 21:03:48] verify done
+[2026-10-06 21:05:48] student done
+[2026-10-06 21:05:57] export + check done
+[2026-10-06 21:07:59] A1 student done
+[2026-10-06 21:08:00] report done

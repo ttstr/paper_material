@@ -1,0 +1,99 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 47031.64it/s]
+[llm] 0 cached, 60 to run
+[llm] 4/60 calls, 98s elapsed, 24.6s/call
+[llm] 8/60 calls, 191s elapsed, 23.8s/call
+[llm] 12/60 calls, 260s elapsed, 21.6s/call
+[llm] 16/60 calls, 387s elapsed, 24.2s/call
+[llm] 20/60 calls, 491s elapsed, 24.5s/call
+[llm] 24/60 calls, 546s elapsed, 22.8s/call
+[llm] 28/60 calls, 642s elapsed, 22.9s/call
+[llm] 32/60 calls, 742s elapsed, 23.2s/call
+[llm] 36/60 calls, 846s elapsed, 23.5s/call
+[llm] 40/60 calls, 951s elapsed, 23.8s/call
+[llm] 44/60 calls, 1010s elapsed, 23.0s/call
+[llm] 48/60 calls, 1115s elapsed, 23.2s/call
+[llm] 52/60 calls, 1197s elapsed, 23.0s/call
+[llm] 56/60 calls, 1292s elapsed, 23.1s/call
+[llm] 60/60 calls, 1346s elapsed, 22.4s/call
+[llm] 0 cached, 180 to run
+[llm] 4/180 calls, 54s elapsed, 13.4s/call
+[llm] 8/180 calls, 108s elapsed, 13.5s/call
+[llm] 12/180 calls, 164s elapsed, 13.6s/call
+[llm] 16/180 calls, 223s elapsed, 13.9s/call
+[llm] 20/180 calls, 339s elapsed, 17.0s/call
+[llm] 24/180 calls, 385s elapsed, 16.0s/call
+[llm] 28/180 calls, 456s elapsed, 16.3s/call
+[llm] 32/180 calls, 521s elapsed, 16.3s/call
+[llm] 36/180 calls, 578s elapsed, 16.0s/call
+[llm] 40/180 calls, 629s elapsed, 15.7s/call
+[llm] 44/180 calls, 717s elapsed, 16.3s/call
+[llm] 48/180 calls, 766s elapsed, 16.0s/call
+[llm] 52/180 calls, 816s elapsed, 15.7s/call
+[llm] 56/180 calls, 873s elapsed, 15.6s/call
+[llm] 60/180 calls, 927s elapsed, 15.5s/call
+[llm] 64/180 calls, 975s elapsed, 15.2s/call
+[llm] 68/180 calls, 1024s elapsed, 15.1s/call
+[llm] 72/180 calls, 1080s elapsed, 15.0s/call
+[llm] 76/180 calls, 1138s elapsed, 15.0s/call
+[llm] 80/180 calls, 1212s elapsed, 15.2s/call
+[llm] 84/180 calls, 1264s elapsed, 15.0s/call
+[llm] 88/180 calls, 1379s elapsed, 15.7s/call
+[llm] 92/180 calls, 1434s elapsed, 15.6s/call
+[llm] 96/180 calls, 1481s elapsed, 15.4s/call
+[llm] 100/180 calls, 1534s elapsed, 15.3s/call
+[llm] 104/180 calls, 1584s elapsed, 15.2s/call
+[llm] 108/180 calls, 1633s elapsed, 15.1s/call
+[llm] 112/180 calls, 1686s elapsed, 15.1s/call
+[llm] 116/180 calls, 1801s elapsed, 15.5s/call
+[llm] 120/180 calls, 1861s elapsed, 15.5s/call
+[llm] 124/180 calls, 1915s elapsed, 15.4s/call
+[llm] 128/180 calls, 1958s elapsed, 15.3s/call
+[llm] 132/180 calls, 2008s elapsed, 15.2s/call
+[llm] 136/180 calls, 2081s elapsed, 15.3s/call
+[llm] 140/180 calls, 2138s elapsed, 15.3s/call
+[llm] 144/180 calls, 2198s elapsed, 15.3s/call
+[llm] 148/180 calls, 2258s elapsed, 15.3s/call
+[llm] 152/180 calls, 2311s elapsed, 15.2s/call
+[llm] 156/180 calls, 2359s elapsed, 15.1s/call
+[llm] 160/180 calls, 2408s elapsed, 15.0s/call
+[llm] 164/180 calls, 2462s elapsed, 15.0s/call
+[llm] 168/180 calls, 2519s elapsed, 15.0s/call
+[llm] 172/180 calls, 2571s elapsed, 14.9s/call
+[llm] 176/180 calls, 2622s elapsed, 14.9s/call
+[llm] 180/180 calls, 2668s elapsed, 14.8s/call
+{
+  "calls": 240,
+  "by_stage": {
+    "profile": {
+      "calls": 60,
+      "prompt_tokens": 37293,
+      "completion_tokens": 10840,
+      "seconds": 1345.96169257164,
+      "parse_ok": 60,
+      "sec_per_call": 22.432694876194,
+      "completion_tok_per_sec": 8.053721038143907,
+      "total_tok_per_sec": 35.76104748422331,
+      "parse_rate": 1.0
+    },
+    "rank": {
+      "calls": 180,
+      "prompt_tokens": 201099,
+      "completion_tokens": 23243,
+      "seconds": 2667.598129749298,
+      "parse_ok": 174,
+      "sec_per_call": 14.819989609718323,
+      "completion_tok_per_sec": 8.713081532331254,
+      "total_tok_per_sec": 84.09887437621039,
+      "parse_rate": 0.9666666666666667
+    }
+  },
+  "prompt_tokens": 238392,
+  "completion_tokens": 34083,
+  "seconds": 4013.559822320938,
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "backend": "transformers",
+  "dtype": "bfloat16",
+  "threads": 2,
+  "batch_size": 4,
+  "n_users": 60
+}

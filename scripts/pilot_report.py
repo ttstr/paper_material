@@ -42,6 +42,11 @@ ASSUMPTIONS = {
         "value": 0.20,
         "what": "qwen/qwen-2.5-7b-instruct list price on OpenRouter, output",
         "source": "https://openrouter.ai/qwen/qwen-2.5-7b-instruct (list price as observed 2026-09/10; may change)"},
+    "cpu_7b_over_1.5b_time_ratio": {
+        "value": 7.61 / 1.54,
+        "what": "CPU decoding is memory-bandwidth bound, so 7B time ~ 1.5B time x parameter ratio (7.61B / 1.54B). Not measured: "
+                "Qwen2.5-7B in bf16 needs ~15 GB for weights alone, more than this box's ~15 GB RAM",
+        "source": "parameter counts from the Qwen2.5-7B-Instruct / Qwen2.5-1.5B-Instruct model cards; linear scaling is an assumption"},
     "same_token_counts_for_7b": {
         "value": True,
         "what": "prompt token counts transfer exactly (Qwen2.5 1.5B and 7B share one tokenizer); completion lengths of the 7B teacher are ASSUMED equal to the 1.5B pilot's",
@@ -94,18 +99,24 @@ def main() -> None:
     kf = int(fcfg["offline"]["reasons_top_k"])
     nrp_f = len(fcfg["offline"].get("reasons_in_perms", [0]))
     # per-user tokens under (a) the pilot config, (b) the full plan config (reasons for all M candidates, all perms)
+    budget_o = int(fcfg["offline"]["profile_max_tokens"]) + nrp_f * (int(fcfg["offline"]["rank_max_tokens"]) + int(
+        fcfg["offline"]["reason_max_tokens"])) + (P_f - nrp_f) * int(fcfg["offline"]["rank_max_tokens"])
+    full_prompt = meas["profile"]["prompt_tok"] + P_f * meas["rank+reasons"]["prompt_tok"]
     per_user = {
         "pilot_config": {
             "prompt_tok": meas["profile"]["prompt_tok"] + len(reason_perms) * meas["rank+reasons"]["prompt_tok"]
                           + (P_p - len(reason_perms)) * meas["rank"]["prompt_tok"],
             "completion_tok": meas["profile"]["completion_tok"] + len(reason_perms) * meas["rank+reasons"]["completion_tok"]
                               + (P_p - len(reason_perms)) * meas["rank"]["completion_tok"],
-            "calls": 1 + P_p},
-        "full_plan_config": {
-            "prompt_tok": meas["profile"]["prompt_tok"] + P_f * meas["rank+reasons"]["prompt_tok"],
+            "calls": 1 + P_p, "basis": "pilot means, pilot config (reasons for top-3 in perm 0)"},
+        "full_plan_extrapolated": {
+            "prompt_tok": full_prompt,
             "completion_tok": meas["profile"]["completion_tok"] + nrp_f * (meas["rank"]["completion_tok"] + kf * o_reason)
                               + (P_f - nrp_f) * meas["rank"]["completion_tok"],
-            "calls": 1 + P_f},
+            "calls": 1 + P_f, "basis": "full plan; reason length per candidate extrapolated from the pilot (likely too short)"},
+        "full_plan_token_budget": {
+            "prompt_tok": full_prompt, "completion_tok": float(budget_o), "calls": 1 + P_f,
+            "basis": "full plan; every call uses its whole max_tokens budget (upper bound)"},
     }
     A = {k: v["value"] for k, v in ASSUMPTIONS.items()}
     est = {}
@@ -115,6 +126,7 @@ def main() -> None:
         est[name] = {
             "per_user": pu, "total_calls": N_USERS_FULL * pu["calls"], "total_prompt_tok": Ptot, "total_completion_tok": Otot,
             "cpu_1.5b_hours(measured_rate)": cpu_h,
+            "cpu_7b_hours(scaled,assumed)": cpu_h * A["cpu_7b_over_1.5b_time_ratio"],
             "gpu_7b_hours_batched(assumed)": (Otot / A["gpu_decode_tok_s_batched"] + Ptot / A["gpu_prefill_tok_s"]) / 3600,
             "gpu_7b_hours_batch1(assumed)": (Otot / A["gpu_decode_tok_s_batch1"] + Ptot / A["gpu_prefill_tok_s"]) / 3600,
             "api_usd(assumed_price)": Ptot / 1e6 * A["api_usd_per_M_input"] + Otot / 1e6 * A["api_usd_per_M_output"],
@@ -178,7 +190,9 @@ def main() -> None:
             L.append(f"| {k} | {v:.4f} |" if isinstance(v, float) else f"| {k} | {v} |")
         L.append(f"\nNLI model `{vs.get('nli_model')}`, sentence encoder `{vs.get('text_encoder')}`; candidates M = "
                  f"{pcfg['offline']['cand_M']} from Stage-0 SASRec (seed 42), so a random teacher puts the target in the top-5 with p = "
-                 f"{5 / int(pcfg['offline']['cand_M']):.2f}.")
+                 f"{5 / int(pcfg['offline']['cand_M']):.2f} and a mean GT rank of {(int(pcfg['offline']['cand_M']) - 1) / 2:.1f} "
+                 f"(0 = top). Measured here: top-5 rate {vs.get('teacher_gt_top5_rate'):.2f}, mean rank "
+                 f"{vs['teacher_gt_rank_mean(0=top)']['mean']:.2f}.")
         L.append("")
     if students:
         L.append("## 3. Student distillation (all 22,363 users evaluated; LLM signals only for the pilot users)")
@@ -192,6 +206,11 @@ def main() -> None:
             L.append(f"| {k} | {d['valid']['ndcg@10']:.4f} | {d['test']['ndcg@10']:.4f} | {d['test']['hr@10']:.4f} | "
                      f"{sub['ndcg@10']:.4f} ({sub['n']}) | {d['best_epoch']} | {d['elapsed_sec'] / 60:.1f} |")
         L.append("")
+        for k, d in students.items():
+            if int(d["best_epoch"]) == 0:
+                L.append(f"- `{k}`: no epoch improved valid NDCG@10 over the Stage-0 initialisation (epochs run: {d['epochs_run']}), "
+                         "so the selected checkpoint **is** Stage-0 and its test metrics equal Stage-0. This pilot shows no effect either way.")
+        L.append("")
     if export:
         L.append("## 4. Online export (measured)")
         L.append("")
@@ -204,18 +223,22 @@ def main() -> None:
              "N = 22,363.")
     L.append("")
     L.append("- CPU, 1.5B, pilot config (measured): T = N · s_user, with s_user the measured generation seconds per user.")
-    L.append("- CPU, 1.5B, full-plan config: T = N · o_user / r_dec, with r_dec the measured aggregate completion tok/s.")
+    L.append("- CPU, 1.5B, full-plan rows: T = N · o_user / r_dec, with r_dec the measured aggregate completion tok/s.")
+    L.append("- CPU, 7B (**scaled, assumed**): T_7B = T_1.5B · 7.61 / 1.54. This is not feasible on this box: bf16 weights need ~15 GB "
+             "of the ~15 GB RAM, so a 4-/8-bit build or a larger machine would be needed.")
     L.append("- 7B on one 24 GB GPU (**assumed**): T = N · (o_user / R_dec + p_user / R_prefill).")
     L.append("- API (**assumed price**): cost = N · (p_user · $in + o_user · $out) / 10⁶.")
     L.append(f"- Full-plan config (`{args.full_config}`): reasons for all {kf} candidates in {nrp_f} of {P_f} permutations. "
-             f"Its completion length is extrapolated as o_rank + {kf} · o_reason, with o_reason = {o_reason:.1f} tok "
-             f"= (o_rank+reasons − o_rank) / {k_reason}, measured in the pilot.")
+             f"`full_plan_extrapolated` takes o_rank + {kf} · o_reason, with o_reason = {o_reason:.1f} tok "
+             f"= (o_rank+reasons − o_rank) / {k_reason} measured in the pilot. The 1.5B model often skips reasons, so this is likely an "
+             f"underestimate. `full_plan_token_budget` assumes every call uses its full max_tokens ({budget_o} completion tok/user), "
+             "which gives an upper bound.")
     L.append("")
-    L.append("| config | calls | prompt tok (M) | completion tok (M) | CPU 1.5B h (measured rate) | 7B GPU h, batched (assumed) | 7B GPU h, batch 1 (assumed) | API USD (assumed price) |")
-    L.append("|---|---|---|---|---|---|---|---|")
+    L.append("| config | calls | prompt tok (M) | completion tok (M) | CPU 1.5B h (measured rate) | CPU 7B h (scaled) | 7B 24GB-GPU h, batched (assumed) | 7B GPU h, batch 1 (assumed) | 7B API USD (assumed price) |")
+    L.append("|---|---|---|---|---|---|---|---|---|")
     for name, e in est.items():
         L.append(f"| {name} | {e['total_calls']:,} | {e['total_prompt_tok'] / 1e6:.1f} | {e['total_completion_tok'] / 1e6:.1f} | "
-                 f"{e['cpu_1.5b_hours(measured_rate)']:.0f} | {e['gpu_7b_hours_batched(assumed)']:.1f} | "
+                 f"{e['cpu_1.5b_hours(measured_rate)']:.0f} | {e['cpu_7b_hours(scaled,assumed)']:.0f} | {e['gpu_7b_hours_batched(assumed)']:.1f} | "
                  f"{e['gpu_7b_hours_batch1(assumed)']:.1f} | {e['api_usd(assumed_price)']:.2f} |")
     L.append("")
     L.append("Assumptions (not measured on this box):")
