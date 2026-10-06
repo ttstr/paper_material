@@ -174,6 +174,12 @@ seed=42 首次全量即落在公开 SASRec-CE（Beauty 5-core LOO、全库排序
 
 唯一的代码改动是**效率**而非数值：训练时只在非 pad 位置计算全库 logits（`h[valid] @ E^T` + CE），与原先 `[B, L, n_items]` 上 `CE(ignore_index=-100, mean)` 数学等价，避免为大量 pad 位置分配 ~0.6 GB 的 logits。早停 patience 由 5 改为 20（写入 `configs/model/sasrec.yaml` 与结果 JSON），epoch 上限 200。
 
+### 基线量级参考（公开报告；预处理不同，只用于判断量级与相对顺序）
+
+- Klenitskiy & Vasilev, RecSys'23（arXiv:2309.07602），Beauty（BERT4Rec 仓库的预处理版本），LOO，全库排序 NDCG@10：SASRec+CE 0.0327、BERT4Rec 0.0187、GRU4Rec 0.0163、SASRec（BCE）0.0126
+- RecTools / bert4rec_repro（github.com/blondered/bert4rec_repro），Beauty，全库：SASRec 0.0359、BERT4Rec 0.0242、MF-BPR 0.0090
+- 本仓用的是 RecBoard 5-core 版本（12101 物品，比上面的版本小），所以绝对值偏高是预期的。核查的重点是相对顺序：CE 训练的 SASRec 应不弱于 BERT4Rec，MF-BPR 应明显最低。实际结论见主表。
+
 ## 默认超参
 
 - SASRec CE：2 layers，2 heads，`d=64`，`max_len=50`，FFN 256，dropout 0.2（调参后见主表），全库 softmax CE，Adam lr=1e-3，batch 256，epoch 上限 200，早停看 valid **NDCG@10**（patience=20）

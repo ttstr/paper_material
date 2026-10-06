@@ -1,0 +1,117 @@
+epoch=1 loss=9.1125 valid_ndcg@10=0.008735 valid_hr@10=0.016769 train_sec=17.8 epoch_sec=19.9 total_sec=20
+epoch=2 loss=8.7882 valid_ndcg@10=0.010675 valid_hr@10=0.021732 train_sec=17.5 epoch_sec=19.5 total_sec=39
+epoch=3 loss=8.6215 valid_ndcg@10=0.012767 valid_hr@10=0.025533 train_sec=17.3 epoch_sec=19.3 total_sec=59
+epoch=4 loss=8.5177 valid_ndcg@10=0.013193 valid_hr@10=0.026964 train_sec=17.9 epoch_sec=20.1 total_sec=79
+epoch=5 loss=8.4235 valid_ndcg@10=0.014382 valid_hr@10=0.029692 train_sec=18.8 epoch_sec=20.9 total_sec=100
+epoch=6 loss=8.3289 valid_ndcg@10=0.016527 valid_hr@10=0.034521 train_sec=18.4 epoch_sec=20.5 total_sec=120
+epoch=7 loss=8.2586 valid_ndcg@10=0.016543 valid_hr@10=0.033985 train_sec=17.9 epoch_sec=19.9 total_sec=140
+epoch=8 loss=8.1979 valid_ndcg@10=0.017631 valid_hr@10=0.036757 train_sec=18.1 epoch_sec=20.1 total_sec=160
+epoch=9 loss=8.1163 valid_ndcg@10=0.017710 valid_hr@10=0.038099 train_sec=18.9 epoch_sec=21.0 total_sec=181
+epoch=10 loss=8.0607 valid_ndcg@10=0.018135 valid_hr@10=0.037741 train_sec=18.0 epoch_sec=20.0 total_sec=201
+epoch=11 loss=8.0209 valid_ndcg@10=0.019865 valid_hr@10=0.040200 train_sec=17.8 epoch_sec=19.8 total_sec=221
+epoch=12 loss=7.9805 valid_ndcg@10=0.020955 valid_hr@10=0.043822 train_sec=18.6 epoch_sec=20.5 total_sec=242
+epoch=13 loss=7.9328 valid_ndcg@10=0.021758 valid_hr@10=0.046014 train_sec=17.9 epoch_sec=19.9 total_sec=262
+epoch=14 loss=7.8773 valid_ndcg@10=0.023639 valid_hr@10=0.047087 train_sec=17.8 epoch_sec=20.2 total_sec=282
+epoch=15 loss=7.8364 valid_ndcg@10=0.022444 valid_hr@10=0.046908 train_sec=18.0 epoch_sec=20.0 total_sec=302
+epoch=16 loss=7.8300 valid_ndcg@10=0.024062 valid_hr@10=0.048831 train_sec=18.7 epoch_sec=20.8 total_sec=323
+epoch=17 loss=7.7815 valid_ndcg@10=0.025087 valid_hr@10=0.051022 train_sec=21.2 epoch_sec=23.7 total_sec=346
+epoch=18 loss=7.7507 valid_ndcg@10=0.025335 valid_hr@10=0.051871 train_sec=19.1 epoch_sec=21.6 total_sec=368
+epoch=19 loss=7.7223 valid_ndcg@10=0.026258 valid_hr@10=0.053034 train_sec=24.9 epoch_sec=27.1 total_sec=395
+epoch=20 loss=7.6909 valid_ndcg@10=0.026250 valid_hr@10=0.052319 train_sec=20.2 epoch_sec=22.3 total_sec=417
+epoch=21 loss=7.6525 valid_ndcg@10=0.028038 valid_hr@10=0.056522 train_sec=25.5 epoch_sec=27.8 total_sec=445
+epoch=22 loss=7.6309 valid_ndcg@10=0.028187 valid_hr@10=0.055136 train_sec=25.0 epoch_sec=27.4 total_sec=473
+epoch=23 loss=7.5905 valid_ndcg@10=0.028463 valid_hr@10=0.056030 train_sec=24.6 epoch_sec=26.9 total_sec=499
+epoch=24 loss=7.5565 valid_ndcg@10=0.029395 valid_hr@10=0.058624 train_sec=24.0 epoch_sec=26.2 total_sec=526
+epoch=25 loss=7.5416 valid_ndcg@10=0.030630 valid_hr@10=0.059116 train_sec=20.6 epoch_sec=23.0 total_sec=549
+epoch=26 loss=7.5121 valid_ndcg@10=0.030875 valid_hr@10=0.060144 train_sec=24.9 epoch_sec=27.3 total_sec=576
+epoch=27 loss=7.4782 valid_ndcg@10=0.030383 valid_hr@10=0.060055 train_sec=24.2 epoch_sec=26.5 total_sec=603
+epoch=28 loss=7.4481 valid_ndcg@10=0.033171 valid_hr@10=0.062782 train_sec=19.5 epoch_sec=21.6 total_sec=624
+epoch=29 loss=7.4273 valid_ndcg@10=0.032127 valid_hr@10=0.062603 train_sec=17.8 epoch_sec=20.1 total_sec=644
+epoch=30 loss=7.3889 valid_ndcg@10=0.031825 valid_hr@10=0.061977 train_sec=21.3 epoch_sec=23.5 total_sec=668
+epoch=31 loss=7.3489 valid_ndcg@10=0.033863 valid_hr@10=0.063811 train_sec=20.7 epoch_sec=23.1 total_sec=691
+epoch=32 loss=7.3133 valid_ndcg@10=0.032481 valid_hr@10=0.064482 train_sec=21.3 epoch_sec=23.5 total_sec=714
+epoch=33 loss=7.3014 valid_ndcg@10=0.032861 valid_hr@10=0.064705 train_sec=19.8 epoch_sec=21.9 total_sec=736
+epoch=34 loss=7.2841 valid_ndcg@10=0.033094 valid_hr@10=0.065465 train_sec=18.3 epoch_sec=21.0 total_sec=757
+epoch=35 loss=7.2638 valid_ndcg@10=0.033192 valid_hr@10=0.066225 train_sec=21.6 epoch_sec=24.1 total_sec=781
+epoch=36 loss=7.2341 valid_ndcg@10=0.034826 valid_hr@10=0.067165 train_sec=21.0 epoch_sec=23.3 total_sec=805
+epoch=37 loss=7.2044 valid_ndcg@10=0.035406 valid_hr@10=0.068417 train_sec=21.9 epoch_sec=24.2 total_sec=829
+epoch=38 loss=7.1876 valid_ndcg@10=0.034521 valid_hr@10=0.067120 train_sec=22.8 epoch_sec=24.9 total_sec=854
+epoch=39 loss=7.1675 valid_ndcg@10=0.034531 valid_hr@10=0.065242 train_sec=21.5 epoch_sec=24.1 total_sec=878
+epoch=40 loss=7.1278 valid_ndcg@10=0.035676 valid_hr@10=0.070205 train_sec=23.7 epoch_sec=26.9 total_sec=905
+epoch=41 loss=7.0981 valid_ndcg@10=0.036397 valid_hr@10=0.069713 train_sec=24.1 epoch_sec=26.5 total_sec=931
+epoch=42 loss=7.0973 valid_ndcg@10=0.035711 valid_hr@10=0.069132 train_sec=24.5 epoch_sec=26.7 total_sec=958
+epoch=43 loss=7.0738 valid_ndcg@10=0.036410 valid_hr@10=0.069221 train_sec=22.2 epoch_sec=24.3 total_sec=982
+epoch=44 loss=7.0430 valid_ndcg@10=0.035905 valid_hr@10=0.068685 train_sec=22.2 epoch_sec=24.3 total_sec=1006
+epoch=45 loss=7.0236 valid_ndcg@10=0.036201 valid_hr@10=0.069490 train_sec=20.6 epoch_sec=22.9 total_sec=1029
+epoch=46 loss=6.9854 valid_ndcg@10=0.035768 valid_hr@10=0.068819 train_sec=21.2 epoch_sec=23.3 total_sec=1053
+epoch=47 loss=6.9914 valid_ndcg@10=0.036627 valid_hr@10=0.070205 train_sec=21.6 epoch_sec=24.0 total_sec=1077
+epoch=48 loss=6.9776 valid_ndcg@10=0.035801 valid_hr@10=0.067969 train_sec=44.3 epoch_sec=46.9 total_sec=1124
+epoch=49 loss=6.9441 valid_ndcg@10=0.036877 valid_hr@10=0.070518 train_sec=36.5 epoch_sec=38.7 total_sec=1162
+epoch=50 loss=6.9315 valid_ndcg@10=0.035844 valid_hr@10=0.069892 train_sec=21.6 epoch_sec=23.8 total_sec=1186
+epoch=51 loss=6.8986 valid_ndcg@10=0.036537 valid_hr@10=0.070831 train_sec=22.6 epoch_sec=25.3 total_sec=1211
+epoch=52 loss=6.8726 valid_ndcg@10=0.037473 valid_hr@10=0.073470 train_sec=21.8 epoch_sec=23.9 total_sec=1235
+epoch=53 loss=6.8597 valid_ndcg@10=0.036267 valid_hr@10=0.068953 train_sec=25.5 epoch_sec=27.7 total_sec=1263
+epoch=54 loss=6.8365 valid_ndcg@10=0.037093 valid_hr@10=0.071815 train_sec=22.1 epoch_sec=24.3 total_sec=1287
+epoch=55 loss=6.8202 valid_ndcg@10=0.035800 valid_hr@10=0.069624 train_sec=21.3 epoch_sec=23.5 total_sec=1311
+epoch=56 loss=6.8017 valid_ndcg@10=0.037499 valid_hr@10=0.071636 train_sec=21.2 epoch_sec=23.4 total_sec=1334
+epoch=57 loss=6.7756 valid_ndcg@10=0.035399 valid_hr@10=0.068417 train_sec=21.6 epoch_sec=23.7 total_sec=1358
+epoch=58 loss=6.7476 valid_ndcg@10=0.037982 valid_hr@10=0.071055 train_sec=21.3 epoch_sec=23.6 total_sec=1381
+epoch=59 loss=6.7350 valid_ndcg@10=0.037054 valid_hr@10=0.071681 train_sec=22.2 epoch_sec=24.4 total_sec=1406
+epoch=60 loss=6.7228 valid_ndcg@10=0.037519 valid_hr@10=0.071189 train_sec=20.7 epoch_sec=22.9 total_sec=1429
+epoch=61 loss=6.6950 valid_ndcg@10=0.036504 valid_hr@10=0.070161 train_sec=21.3 epoch_sec=23.5 total_sec=1452
+epoch=62 loss=6.6911 valid_ndcg@10=0.036559 valid_hr@10=0.069982 train_sec=21.6 epoch_sec=23.9 total_sec=1476
+epoch=63 loss=6.6703 valid_ndcg@10=0.036933 valid_hr@10=0.070295 train_sec=22.4 epoch_sec=24.5 total_sec=1501
+epoch=64 loss=6.6479 valid_ndcg@10=0.036629 valid_hr@10=0.069445 train_sec=21.1 epoch_sec=23.8 total_sec=1525
+epoch=65 loss=6.6237 valid_ndcg@10=0.036220 valid_hr@10=0.069579 train_sec=21.5 epoch_sec=23.8 total_sec=1548
+epoch=66 loss=6.6149 valid_ndcg@10=0.037637 valid_hr@10=0.072128 train_sec=20.8 epoch_sec=22.9 total_sec=1571
+epoch=67 loss=6.5977 valid_ndcg@10=0.037013 valid_hr@10=0.070250 train_sec=21.3 epoch_sec=23.5 total_sec=1595
+epoch=68 loss=6.5717 valid_ndcg@10=0.037006 valid_hr@10=0.070831 train_sec=21.0 epoch_sec=23.2 total_sec=1618
+epoch=69 loss=6.5612 valid_ndcg@10=0.037644 valid_hr@10=0.071815 train_sec=20.8 epoch_sec=22.9 total_sec=1641
+epoch=70 loss=6.5593 valid_ndcg@10=0.037125 valid_hr@10=0.069490 train_sec=22.1 epoch_sec=24.3 total_sec=1665
+epoch=71 loss=6.5504 valid_ndcg@10=0.038110 valid_hr@10=0.071502 train_sec=21.3 epoch_sec=23.8 total_sec=1689
+epoch=72 loss=6.5296 valid_ndcg@10=0.037523 valid_hr@10=0.071010 train_sec=22.2 epoch_sec=24.4 total_sec=1713
+epoch=73 loss=6.4929 valid_ndcg@10=0.037420 valid_hr@10=0.070831 train_sec=21.5 epoch_sec=23.6 total_sec=1737
+epoch=74 loss=6.4851 valid_ndcg@10=0.037637 valid_hr@10=0.072307 train_sec=20.8 epoch_sec=23.1 total_sec=1760
+epoch=75 loss=6.4790 valid_ndcg@10=0.037385 valid_hr@10=0.071770 train_sec=22.1 epoch_sec=24.2 total_sec=1784
+epoch=76 loss=6.4628 valid_ndcg@10=0.037065 valid_hr@10=0.071010 train_sec=21.4 epoch_sec=23.6 total_sec=1808
+epoch=77 loss=6.4443 valid_ndcg@10=0.037081 valid_hr@10=0.071502 train_sec=21.8 epoch_sec=24.0 total_sec=1832
+epoch=78 loss=6.4217 valid_ndcg@10=0.037014 valid_hr@10=0.071636 train_sec=20.8 epoch_sec=23.0 total_sec=1855
+epoch=79 loss=6.4256 valid_ndcg@10=0.037097 valid_hr@10=0.070608 train_sec=21.3 epoch_sec=23.4 total_sec=1878
+epoch=80 loss=6.4009 valid_ndcg@10=0.036864 valid_hr@10=0.069624 train_sec=21.5 epoch_sec=23.8 total_sec=1902
+epoch=81 loss=6.3877 valid_ndcg@10=0.036631 valid_hr@10=0.069937 train_sec=21.9 epoch_sec=24.1 total_sec=1926
+epoch=82 loss=6.3579 valid_ndcg@10=0.036735 valid_hr@10=0.068953 train_sec=21.0 epoch_sec=23.1 total_sec=1949
+epoch=83 loss=6.3721 valid_ndcg@10=0.036310 valid_hr@10=0.069490 train_sec=20.9 epoch_sec=23.2 total_sec=1973
+epoch=84 loss=6.3453 valid_ndcg@10=0.037338 valid_hr@10=0.071100 train_sec=21.5 epoch_sec=23.7 total_sec=1996
+epoch=85 loss=6.3313 valid_ndcg@10=0.036667 valid_hr@10=0.069311 train_sec=20.9 epoch_sec=23.1 total_sec=2019
+epoch=86 loss=6.3225 valid_ndcg@10=0.037755 valid_hr@10=0.071010 train_sec=23.3 epoch_sec=25.8 total_sec=2045
+epoch=87 loss=6.2924 valid_ndcg@10=0.037782 valid_hr@10=0.069848 train_sec=23.1 epoch_sec=26.2 total_sec=2071
+epoch=88 loss=6.2990 valid_ndcg@10=0.037037 valid_hr@10=0.069848 train_sec=21.4 epoch_sec=23.6 total_sec=2095
+epoch=89 loss=6.2622 valid_ndcg@10=0.037431 valid_hr@10=0.071547 train_sec=21.4 epoch_sec=23.7 total_sec=2119
+epoch=90 loss=6.2669 valid_ndcg@10=0.036461 valid_hr@10=0.068953 train_sec=21.5 epoch_sec=23.8 total_sec=2143
+epoch=91 loss=6.2477 valid_ndcg@10=0.037353 valid_hr@10=0.070384 train_sec=21.9 epoch_sec=24.2 total_sec=2167
+early stop at epoch 91 (patience=20)
+{
+  "tag": "bert4rec_d0.2_s42",
+  "valid": {
+    "hr@5": 0.04699727228010553,
+    "ndcg@5": 0.030206831856598493,
+    "hr@10": 0.07150203461074095,
+    "ndcg@10": 0.03810972325427589,
+    "hr@20": 0.10508429101641104,
+    "ndcg@20": 0.04654553795630182,
+    "n": 22363.0,
+    "mean_rank": 2887.2969190180206
+  },
+  "test": {
+    "hr@5": 0.032822072172785405,
+    "ndcg@5": 0.020699442616698982,
+    "hr@10": 0.0504404596878773,
+    "ndcg@10": 0.026377402090275788,
+    "hr@20": 0.07870142646335465,
+    "ndcg@20": 0.0334621708545808,
+    "n": 22363.0,
+    "mean_rank": 3155.2766623440502
+  },
+  "checkpoint": "results/checkpoints/bert4rec_d0.2_s42_best.pt"
+}
+wrote results/bert4rec_d0.2_s42_metrics.json

@@ -1,0 +1,65 @@
+epoch=1 loss=8.6651 valid_ndcg@10=0.017522 valid_hr@10=0.037115 train_sec=35.9 epoch_sec=39.2 total_sec=39
+epoch=2 loss=8.0923 valid_ndcg@10=0.023504 valid_hr@10=0.048249 train_sec=36.4 epoch_sec=39.8 total_sec=79
+epoch=3 loss=7.8743 valid_ndcg@10=0.029058 valid_hr@10=0.059026 train_sec=36.9 epoch_sec=39.9 total_sec=119
+epoch=4 loss=7.7076 valid_ndcg@10=0.032824 valid_hr@10=0.065286 train_sec=36.2 epoch_sec=39.1 total_sec=158
+epoch=5 loss=7.5757 valid_ndcg@10=0.038479 valid_hr@10=0.074811 train_sec=36.0 epoch_sec=39.0 total_sec=197
+epoch=6 loss=7.4608 valid_ndcg@10=0.041878 valid_hr@10=0.082547 train_sec=36.2 epoch_sec=39.0 total_sec=236
+epoch=7 loss=7.3787 valid_ndcg@10=0.044532 valid_hr@10=0.086885 train_sec=35.9 epoch_sec=39.0 total_sec=275
+epoch=8 loss=7.2937 valid_ndcg@10=0.045655 valid_hr@10=0.089970 train_sec=36.7 epoch_sec=39.7 total_sec=315
+epoch=9 loss=7.2236 valid_ndcg@10=0.048071 valid_hr@10=0.094486 train_sec=36.8 epoch_sec=40.0 total_sec=355
+epoch=10 loss=7.1552 valid_ndcg@10=0.049437 valid_hr@10=0.098645 train_sec=35.5 epoch_sec=38.5 total_sec=393
+epoch=11 loss=7.0955 valid_ndcg@10=0.050774 valid_hr@10=0.100568 train_sec=35.9 epoch_sec=38.6 total_sec=432
+epoch=12 loss=7.0336 valid_ndcg@10=0.052101 valid_hr@10=0.102401 train_sec=35.4 epoch_sec=38.3 total_sec=470
+epoch=13 loss=6.9861 valid_ndcg@10=0.051712 valid_hr@10=0.103564 train_sec=41.3 epoch_sec=44.4 total_sec=515
+epoch=14 loss=6.9436 valid_ndcg@10=0.052208 valid_hr@10=0.104458 train_sec=39.1 epoch_sec=42.4 total_sec=557
+epoch=15 loss=6.8877 valid_ndcg@10=0.052434 valid_hr@10=0.106739 train_sec=39.1 epoch_sec=42.2 total_sec=599
+epoch=16 loss=6.8433 valid_ndcg@10=0.053093 valid_hr@10=0.108617 train_sec=38.8 epoch_sec=42.1 total_sec=641
+epoch=17 loss=6.7989 valid_ndcg@10=0.051955 valid_hr@10=0.106962 train_sec=39.3 epoch_sec=42.5 total_sec=684
+epoch=18 loss=6.7632 valid_ndcg@10=0.052641 valid_hr@10=0.108751 train_sec=39.3 epoch_sec=43.2 total_sec=727
+epoch=19 loss=6.7277 valid_ndcg@10=0.053301 valid_hr@10=0.109064 train_sec=31.8 epoch_sec=34.4 total_sec=762
+epoch=20 loss=6.6967 valid_ndcg@10=0.053183 valid_hr@10=0.109958 train_sec=31.3 epoch_sec=33.9 total_sec=795
+epoch=21 loss=6.6549 valid_ndcg@10=0.052503 valid_hr@10=0.109198 train_sec=31.1 epoch_sec=33.7 total_sec=829
+epoch=22 loss=6.6211 valid_ndcg@10=0.052492 valid_hr@10=0.108125 train_sec=34.9 epoch_sec=37.8 total_sec=867
+epoch=23 loss=6.5936 valid_ndcg@10=0.052306 valid_hr@10=0.108438 train_sec=31.5 epoch_sec=34.2 total_sec=901
+epoch=24 loss=6.5695 valid_ndcg@10=0.052519 valid_hr@10=0.109735 train_sec=31.9 epoch_sec=34.8 total_sec=936
+epoch=25 loss=6.5459 valid_ndcg@10=0.052667 valid_hr@10=0.109332 train_sec=32.9 epoch_sec=36.3 total_sec=972
+epoch=26 loss=6.5187 valid_ndcg@10=0.052379 valid_hr@10=0.108259 train_sec=37.9 epoch_sec=40.8 total_sec=1013
+epoch=27 loss=6.5037 valid_ndcg@10=0.052052 valid_hr@10=0.108796 train_sec=38.2 epoch_sec=41.3 total_sec=1054
+epoch=28 loss=6.4772 valid_ndcg@10=0.051548 valid_hr@10=0.107678 train_sec=36.4 epoch_sec=39.5 total_sec=1094
+epoch=29 loss=6.4598 valid_ndcg@10=0.051827 valid_hr@10=0.107991 train_sec=38.8 epoch_sec=41.7 total_sec=1135
+epoch=30 loss=6.4376 valid_ndcg@10=0.050565 valid_hr@10=0.105129 train_sec=37.8 epoch_sec=41.0 total_sec=1176
+epoch=31 loss=6.4273 valid_ndcg@10=0.050911 valid_hr@10=0.106873 train_sec=37.7 epoch_sec=41.5 total_sec=1218
+epoch=32 loss=6.4066 valid_ndcg@10=0.051447 valid_hr@10=0.107946 train_sec=38.9 epoch_sec=42.0 total_sec=1260
+epoch=33 loss=6.3943 valid_ndcg@10=0.051819 valid_hr@10=0.108662 train_sec=38.1 epoch_sec=41.4 total_sec=1301
+epoch=34 loss=6.3750 valid_ndcg@10=0.051521 valid_hr@10=0.108259 train_sec=38.1 epoch_sec=41.1 total_sec=1342
+epoch=35 loss=6.3645 valid_ndcg@10=0.051398 valid_hr@10=0.108304 train_sec=40.8 epoch_sec=45.1 total_sec=1387
+epoch=36 loss=6.3544 valid_ndcg@10=0.051617 valid_hr@10=0.107991 train_sec=41.7 epoch_sec=44.8 total_sec=1432
+epoch=37 loss=6.3397 valid_ndcg@10=0.051171 valid_hr@10=0.108662 train_sec=39.4 epoch_sec=42.6 total_sec=1475
+epoch=38 loss=6.3317 valid_ndcg@10=0.051482 valid_hr@10=0.107901 train_sec=38.3 epoch_sec=41.4 total_sec=1516
+epoch=39 loss=6.3158 valid_ndcg@10=0.051789 valid_hr@10=0.109377 train_sec=38.0 epoch_sec=41.1 total_sec=1557
+early stop at epoch 39 (patience=20)
+{
+  "tag": "sasrec_t_d0.5_s42",
+  "valid": {
+    "hr@5": 0.07154675133032241,
+    "ndcg@5": 0.04121413027393659,
+    "hr@10": 0.10906407905916023,
+    "ndcg@10": 0.05330088530133127,
+    "hr@20": 0.15413853239726333,
+    "ndcg@20": 0.06467149564834004,
+    "n": 22363.0,
+    "mean_rank": 2149.47538344587
+  },
+  "test": {
+    "hr@5": 0.05366006349774181,
+    "ndcg@5": 0.032289120711969224,
+    "hr@10": 0.08657156910969012,
+    "ndcg@10": 0.04290778796440378,
+    "hr@20": 0.1279792514421142,
+    "ndcg@20": 0.05336900909128102,
+    "n": 22363.0,
+    "mean_rank": 2402.4470777623756
+  },
+  "checkpoint": "results/checkpoints/sasrec_t_d0.5_s42_best.pt"
+}
+wrote results/sasrec_t_d0.5_s42_metrics.json
