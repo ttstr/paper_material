@@ -1,0 +1,35 @@
+# Equal, small tuning budget for every non-LLM baseline (plan §3.2 item 7):
+#   2 configurations per method, seed 42 only, selection by best valid NDCG@10 (never test),
+#   then the selected configuration is run with seeds 42-46 (the seed-42 search run is reused).
+# Everything else is fixed and shared: d=64, max_len=50, batch 256 (MF-BPR: 4096 pairs), Adam lr 1e-3,
+# max 200 epochs (MF-BPR 300), early stopping on valid NDCG@10 with patience 20, full-catalogue
+# evaluation by pcdrec.evaluator (history not filtered).
+selection_metric: valid_ndcg@10
+search_seed: 42
+seeds: [42, 43, 44, 45, 46]
+methods:
+  SASRec:
+    model: sasrec
+    grid:
+      - {label: "dropout=0.2", tag: sasrec_full, args: ""}   # Stage-0 runs (identical code path/config)
+      - {label: "dropout=0.5", tag: sasrec_d0.5, args: "--set hidden_dropout_prob=0.5 --set attn_dropout_prob=0.5"}
+  GRU4Rec:
+    model: gru4rec
+    grid:
+      - {label: "dropout=0.2", tag: gru4rec_d0.2, args: "--set hidden_dropout_prob=0.2"}
+      - {label: "dropout=0.5", tag: gru4rec_d0.5, args: "--set hidden_dropout_prob=0.5"}
+  BERT4Rec:
+    model: bert4rec
+    grid:
+      - {label: "dropout=0.2", tag: bert4rec_d0.2, args: "--set hidden_dropout_prob=0.2 --set attn_dropout_prob=0.2"}
+      - {label: "dropout=0.5", tag: bert4rec_d0.5, args: "--set hidden_dropout_prob=0.5 --set attn_dropout_prob=0.5"}
+  SASRec-T:
+    model: sasrec_t
+    grid:
+      - {label: "dropout=0.2", tag: sasrec_t_d0.2, args: "--set hidden_dropout_prob=0.2 --set attn_dropout_prob=0.2"}
+      - {label: "dropout=0.5", tag: sasrec_t_d0.5, args: "--set hidden_dropout_prob=0.5 --set attn_dropout_prob=0.5"}
+  MF-BPR:
+    model: mf_bpr
+    grid:
+      - {label: "l2=1e-5", tag: mf_bpr_l2e-5, args: "--set l2=0.00001"}
+      - {label: "l2=1e-4", tag: mf_bpr_l2e-4, args: "--set l2=0.0001"}

@@ -4,8 +4,8 @@
 All numbers come from the JSON files written by `pcdrec.train`; nothing is hand-entered.
 
 Usage:
-  python scripts/06_tables.py                       # default: results/sasrec_full_s*_metrics.json
-  python scripts/06_tables.py --glob 'results/xxx_s*_metrics.json' --out-stem results/main_table_xxx
+  python scripts/06_tables.py                       # main table: all baselines -> results/main_table_beauty.{csv,md}
+  python scripts/06_tables.py --glob 'results/sasrec_full_s*_metrics.json' --out-stem results/main_table_sasrec_full
 """
 
 from __future__ import annotations
@@ -31,6 +31,12 @@ def mean_std(xs: list[float]) -> tuple[float, float]:
 
 
 def main() -> None:
+    import sys
+
+    if "--glob" not in sys.argv:
+        from main_table import main as main_table  # multi-method table + paired tests
+
+        return main_table()
     ap = argparse.ArgumentParser()
     ap.add_argument("--glob", default=str(ROOT / "results" / "sasrec_full_s*_metrics.json"))
     ap.add_argument("--out-stem", default=str(ROOT / "results" / "main_table_sasrec_full"))

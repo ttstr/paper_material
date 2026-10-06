@@ -53,11 +53,16 @@ results/*.csv
 !results/*_s4[2-6]_metrics.json
 !results/*_s4[2-6]_metrics.csv
 !results/search_summary.csv
+!results/significance_beauty.json
 results/llm_cache/
 results/pilot/**/raw/
+# raw LLM call cache (full generations) and tensors stay local; summaries/profiles/rankings are committed
+results/pilot/**/calls.jsonl
+results/pilot/online_export/
 
 # --- logs: ignore by default, keep only the small per-seed full-run training logs ---
 *.log
 logs/*
 !logs/sasrec_full_s*.log
 !logs/*_s4[2-6].log
+!logs/pilot_*.log
