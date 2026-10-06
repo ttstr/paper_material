@@ -12,6 +12,7 @@ import pandas as pd
 import yaml
 
 from .text_fields import DEFAULT_TEXT_FIELDS, item_text_table
+from ..paths import REPO_ROOT, apply_data_env
 
 
 INTERACTION_COLS = ["USER", "ITEM", "RATING", "TIMESTAMP"]
@@ -31,6 +32,11 @@ def load_yaml(path: str | Path) -> dict:
         return yaml.safe_load(f)
 
 
+def load_data_config(path: str | Path) -> dict:
+    """Load a data yaml and resolve repo-relative paths + PCDREC_DATA_DIR overrides."""
+    return apply_data_env(load_yaml(path))
+
+
 def _read_tsv(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, sep="\t")
 
@@ -43,9 +49,6 @@ def validate_against_manifest(
     report: dict[str, Any] = {}
     for name, meta in manifest.items():
         path = raw_dir / name
-        if not path.exists():
-            # fall back to absolute path in manifest
-            path = Path(meta.get("path", path))
         expected_sha = meta["sha256"]
         expected_rows = meta["rows"]
         actual_sha = sha256_file(path)
@@ -187,7 +190,7 @@ def load_and_process(
     write_processed: bool = True,
 ) -> dict[str, Any]:
     """Full pipeline: validate, build sequences, optionally write processed artifacts."""
-    cfg = load_yaml(data_cfg_path)
+    cfg = load_data_config(data_cfg_path)
     raw_dir = Path(cfg["raw_dir"])
     processed_dir = Path(cfg["processed_dir"])
     manifest_path = Path(cfg.get("manifest", raw_dir / "manifest.json"))
@@ -304,7 +307,7 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--config", default="/workspace/pcdrec/configs/data/beauty.yaml")
+    ap.add_argument("--config", default=str(REPO_ROOT / "configs/data/beauty.yaml"))
     args = ap.parse_args()
     bundle = load_and_process(args.config, write_processed=True)
     print(json.dumps(bundle["stats"], indent=2))

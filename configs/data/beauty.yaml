@@ -1,7 +1,11 @@
 dataset: beauty
-raw_dir: /workspace/pcdrec-data/amazon-beauty
-manifest: /workspace/pcdrec-data/amazon-beauty/manifest.json
-processed_dir: /workspace/pcdrec/data/processed/beauty
+# Paths are relative to the repository root (absolute paths also accepted).
+# Override the raw data location with the environment variable PCDREC_DATA_DIR,
+# and the processed cache with PCDREC_PROCESSED_DIR.
+# Rebuild raw data from the official source: bash scripts/00_build_beauty_from_raw.sh
+raw_dir: data/raw/amazon-beauty
+manifest: data/raw/amazon-beauty/manifest.json
+processed_dir: data/processed/beauty
 text_fields:
   - title
   - categories

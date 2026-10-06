@@ -1,4 +1,5 @@
-model: sasrec
+model: sasrec_t
+text_encoder: sentence-transformers/all-MiniLM-L6-v2   # frozen; item text = title + categories + brand; cached in data/processed (not in git)
 n_layers: 2
 n_heads: 2
 hidden_size: 64

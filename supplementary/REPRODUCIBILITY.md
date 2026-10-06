@@ -12,7 +12,7 @@ All commands below come from the repository `README.md` and are run from the rep
 | Leakage guards (LLM inputs never contain valid/test targets; hold-out prefix) | **Implemented + tested** | `tests/test_no_leakage.py` |
 | Full-catalog HR/NDCG evaluator | **Implemented + tested** | `tests/test_metrics.py` |
 | Online export with no LLM imports and SASRec-only parameter count | **Implemented + tested** | `tests/test_online_no_llm.py` |
-| Test suite | **11 passed** (re-run 2026-10-06 UTC+8) | `pytest -q` |
+| Test suite | **22 passed** (re-run 2026-10-06 UTC+8, after data-build + baseline framework) | `pytest -q` |
 | SASRec-CE baseline, Beauty, 5 seeds, CPU | **Reproduced (only real result)** | `results/main_table_sasrec_full.{md,csv}`, `results/sasrec_full_s4[2-6]_metrics.{json,csv}`, `logs/sasrec_full_s4[2-6].log` |
 | SASRec smoke run (1000 users) | Smoke test only, **not a paper result** | `results/sasrec_subset1000_metrics.*` |
 | Offline LLM profiling / teacher ranking | **TODO** (stub `src/pcdrec/llm_offline/`) | — |
@@ -24,7 +24,7 @@ All commands below come from the repository `README.md` and are run from the rep
 | Latency benchmark (P50/P95, throughput) | **TODO** (no measurement yet) | — |
 | Offline LLM cost accounting (calls, tokens, GPU-h) | **TODO** | — |
 | Determinism test (`test_determinism.py` from the plan) | **TODO** (not in the repo yet) | — |
-| Script converting the public raw Amazon files into the TSV splits | **TODO** (see DATA_STATEMENT.md §3) | — |
+| One-command data rebuild from the official Zenodo archive with FreeRec 0.9.7 (RecBoard `Amazon2014Beauty_550_LOU`) + sha256 check | **Reproduced byte-for-byte** (2026-10-06, Linux, fresh venv) | `scripts/00_build_beauty_from_raw.sh`, `scripts/data_build/build_beauty_from_recboard.py`, DATA_STATEMENT.md §1/§3 |
 
 ## 2. Environment (machine that produced the baseline)
 
@@ -37,8 +37,7 @@ All commands below come from the repository `README.md` and are run from the rep
 | numpy / pandas / pyarrow / PyYAML / tqdm / pytest | 2.5.3 / 3.0.6 / 25.0.1 / 6.0.3 / 4.70.1 / 9.1.1 |
 | Threads | seed 42: 4 torch threads (run alone); seeds 43–46: 3 threads each, two parallel queues |
 
-The requirements file only gives lower bounds (`torch>=2.1.0`, ...). TODO: add a lock file (e.g. `pip freeze > requirements.lock`) before release.
-LLM-stage dependencies (vLLM, transformers, sentence-transformers, NLI model) are not installed yet. TODO: pin them when the stage is implemented.
+`requirements.txt` gives lower bounds; **`requirements-lock.txt`** is the exact `pip freeze` of the environment used for every run (Python 3.13.5, recorded in `.python-version`). The data build uses a separate environment pinned in `requirements-freerec.txt` (freerec 0.9.7, pandas 2.3.3, numpy 2.5.0, polars 1.44.2, torchdata 0.7.0 `--no-deps`).
 
 ## 3. Seeds and determinism
 - Seeds: 42, 43, 44, 45, 46. `train.py:set_seed` seeds `random`, `numpy` and `torch` (plus CUDA when available).
@@ -55,8 +54,8 @@ pip install torch --index-url https://download.pytorch.org/whl/cpu   # when ther
 pip install -r requirements.txt
 export PYTHONPATH=$PWD/src
 
-# 1) link the data (path configurable via PCDREC_DATA) + validate/export processed splits
-bash scripts/00_link_user_data.sh
+# 1) rebuild the data from Zenodo with FreeRec 0.9.7 (+ sha256 check), then validate/export processed splits
+bash scripts/00_build_beauty_from_raw.sh          # output dir: data/raw/amazon-beauty or $PCDREC_DATA_DIR
 bash scripts/01_load_splits.sh
 
 # 2) unit tests
@@ -78,7 +77,7 @@ THREADS=3 nohup bash scripts/run_sasrec_full_seeds.sh 44 46 > logs/queue_b.log 2
 # 6) aggregate the per-seed JSONs into the main table
 python scripts/06_tables.py
 ```
-Note: `configs/data/beauty.yaml` and `scripts/00_link_user_data.sh` default to a local absolute data path. External users must set `PCDREC_DATA` and edit `raw_dir`/`manifest` in `configs/data/beauty.yaml`. TODO: make the config path relative or environment-driven.
+Paths: all configs use repository-relative paths (`data/raw/amazon-beauty`, `data/processed/beauty`, `results/`). `PCDREC_DATA_DIR` overrides the raw data directory and `PCDREC_PROCESSED_DIR` the processed cache; no machine-specific absolute path is needed.
 
 ## 5. Expected output (baseline)
 `results/main_table_sasrec_full.md` (auto-generated; do not hand-edit). Test, mean ± std over 5 seeds:

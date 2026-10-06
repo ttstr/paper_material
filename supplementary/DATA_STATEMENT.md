@@ -1,27 +1,31 @@
 # Data Statement — PCDRec
 
 ## 1. Dataset and source
-- **Amazon Beauty** (category "Beauty"), from the Amazon product review data released by McAuley et al. (SIGIR 2015, "Image-based Recommendations on Styles and Substitutes") and He & McAuley ("Ups and Downs", 2016). Public page for the 2014 version: https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html (checked 2026-10-06 UTC+8). The page says this older version is kept "mainly ... for the sake of reproducing past results" and asks users to "cite one or both" of the two papers above.
-- The experiments use a **pre-processed leave-one-out version supplied to the authors**: TSV files `train.txt`, `valid.txt`, `test.txt`, `item_meta.txt` plus a `manifest.json` with sha256 hashes.
-  - Its size is **consistent with the public Beauty 5-core file**: train + valid + test = 153,776 + 22,363 + 22,363 = 198,502 interactions, which equals the 198,502 reviews listed for "Beauty 5-core" on the page above. Timestamps run from 2002-06 to 2014-07 (manifest `ts_min`/`ts_max`). TODO: confirm the exact provenance and preprocessing script of the supplied files.
-- Statistics: 22,363 users; 12,101 items (metadata covers every interacted item); average sequence length 8.88 (train part 6.88; min 3, median 4, max 202); density 0.073%.
+- **Amazon Beauty** (category "Beauty"), from the Amazon product review data (2014 version) released by McAuley et al. (SIGIR 2015, "Image-based Recommendations on Styles and Substitutes") and He & McAuley ("Ups and Downs", WWW 2016). Public page: https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html (checked 2026-10-06 UTC+8); it asks users to "cite one or both" of the two papers.
+- **Exact benchmark used: RecBoard `Amazon2014Beauty_550_LOU`**, built with the unmodified **FreeRec 0.9.7** CLI from the RecBoard/FreeRec Atomic archive (refs below):
+  - input archive: `Amazon2014Beauty.zip` (`Amazon2014Beauty.inter` + `Amazon2014Beauty.item`) from Zenodo record 10995912 (DOI 10.5281/zenodo.10995912), URL `https://zenodo.org/records/10995912/files/Amazon2014Beauty.zip`, as registered in FreeRec's data registry; MD5 `ed0f0cfe2c44bbed899ca3da3aaf2918` (published by Zenodo), SHA256 `2895cc3f956a2844782cf2ac494da0efda578005674042ad5aa715ad9943c95f`;
+  - command (as listed by RecBoard): `freerec make Amazon2014Beauty --root <dir> --kcore4user 5 --kcore4item 5 --splitting LOU`, i.e. iterative 5-core on users and items, rating threshold 0 (every rating is an interaction), leave-one-out per user by timestamp (last → test, second-to-last → valid, rest → train);
+  - FreeRec output `train.txt / valid.txt / test.txt / item.txt` = our `train.txt / valid.txt / test.txt / item_meta.txt` (`item.txt` renamed).
+  - References: RecBoard metadata https://github.com/MTandHJ/RecBoard/blob/master/benchmark/Amazon2014Beauty_550_LOU/meta.json ; FreeRec registry https://github.com/MTandHJ/freerec/blob/master/freerec/data/registry.json ; Zenodo https://zenodo.org/records/10995912 .
+- **Provenance verified (2026-10-06 UTC+8):** rebuilding from the Zenodo archive with FreeRec 0.9.7 (pandas 2.3.3, numpy 2.5.0) on Linux reproduces all four files **byte-for-byte** (sha256 equal to `manifest.json`) once record terminators are written as CRLF; the reference files were produced on Windows, where pandas writes CRLF record terminators (newlines inside quoted titles stay LF). Content is identical either way; both CRLF and LF reference hashes are checked by the build script.
+- Statistics: 22,363 users; 12,101 items (metadata covers every interacted item); 198,502 interactions (train 153,776 / valid 22,363 / test 22,363); average sequence length 8.88 (train part 6.88; min 3, median 4, max 202); density 0.073%. Timestamps 2002-06 to 2014-07.
 
 ## 2. License / terms of use
-- The dataset page asks users to cite the papers but **does not state an explicit license** (checked 2026-10-06). Common practice treats the data as research-only. Underlying content (reviews, product metadata) originates from Amazon. **TODO: verify the current terms** with the dataset maintainers before any public release, and do not redistribute.
-- Consequence for this project: **the repository contains no raw or processed Amazon data.** `.gitignore` excludes `data/raw/`, `data/processed/`, `**/amazon-beauty/`, `train.txt`, `valid.txt`, `test.txt`, `item_meta.txt`, `*.tsv`, `*.pkl` and `*.parquet`. `data/raw/amazon-beauty` is only a local symlink created by `scripts/00_link_user_data.sh`.
-- The repository may ship: configs, the sha256 manifest summary (hashes and row counts only), code, aggregate metrics (`results/*metrics*`, main table) and per-seed training logs. These contain no review text and no per-user records.
+- The Zenodo record of the Atomic archive is labelled **CC BY 4.0** (checked 2026-10-06); this covers the repackaging. The underlying Amazon review data page asks users to cite the papers but **states no explicit license**; common practice treats it as research-only. **TODO: verify the current terms** with the dataset maintainers before any public release; we do not redistribute data.
+- Consequence for this project: **the repository contains no raw or processed Amazon data** (no `.inter/.item`, no zip, no TSV). `.gitignore` excludes `data/raw/`, `data/processed/`, `data/recboard_build/`, `**/amazon-beauty/`, `*.zip`, `*.inter`, `*.item`, `train.txt`, `valid.txt`, `test.txt`, `item_meta.txt`, `*.tsv`, `*.pkl`, `*.parquet`, `*.npy`.
+- The repository ships: code (including the data build script), configs, sha256 reference hashes, aggregate metrics, per-user ranks (integers, keyed by anonymised FreeRec user ids, no interaction records) and training logs.
 
-## 3. How to obtain the data yourself
-1. Download the **Beauty 5-core** reviews and the **Beauty metadata** from https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html (2014 version) and cite the papers listed there.
-2. Convert the files into the four TSVs (tab-separated):
-   - interactions `USER ITEM RATING TIMESTAMP`, with ids remapped to contiguous integers from 0;
-   - leave-one-out per user: last interaction → `test.txt`, second-to-last → `valid.txt`, rest → `train.txt`; sort by timestamp and keep file order for ties; every user has ≥ 3 training interactions;
-   - metadata `ITEM TITLE SALES_TYPE SALES_RANK CATEGORIES PRICE BRAND`.
-   **TODO: the conversion script is not in the repository yet.** Add `scripts/00_prepare_amazon_beauty.py` (raw json → TSV + manifest) and check that its sha256 hashes match `manifest.json`.
-3. Put the files in any directory, then `export PCDREC_DATA=/path/to/amazon-beauty`, update `configs/data/beauty.yaml` (`raw_dir`, `manifest`), and run `bash scripts/00_link_user_data.sh && bash scripts/01_load_splits.sh`. The loader checks sha256 hashes, row counts and LOO invariants.
+## 3. How to obtain the data yourself (one command)
+```bash
+bash scripts/00_build_beauty_from_raw.sh            # -> data/raw/amazon-beauty
+# or: PCDREC_DATA_DIR=/any/dir bash scripts/00_build_beauty_from_raw.sh
+# offline: ... --archive /path/to/Amazon2014Beauty.zip
+```
+The script (i) creates an isolated FreeRec environment (`.freerec-venv`, pins in `requirements-freerec.txt`: freerec 0.9.7, pandas 2.3.3, numpy 2.5.0, polars 1.44.2, torchdata 0.7.0 `--no-deps`, CPU torch); (ii) downloads the archive from Zenodo and checks MD5/SHA256; (iii) runs the FreeRec command above; (iv) writes the four TSVs + `manifest.json` (sha256, rows, users, items, timestamp range) + `build_info.json` (versions, command, audit) and **fails if any sha256 differs from the reference**; (v) audits the split (one valid/test per user, no duplicate user–item pairs, per-user time order train ≤ valid ≤ test, sizes equal RecBoard metadata). Implementation: `scripts/data_build/build_beauty_from_recboard.py` (stdlib only), adapted from the original data-preparation scripts of this project's authors.
+Then `bash scripts/01_load_splits.sh` validates the manifest again and builds the processed cache. Training code reads `configs/data/beauty.yaml` (`raw_dir: data/raw/amazon-beauty`, repo-relative) or the `PCDREC_DATA_DIR` environment variable.
 
 ## 4. Preprocessing used in the paper
-- No further filtering or id remapping (already done in the supplied files). Sequences are built by timestamp.
+- No further filtering or id remapping beyond FreeRec's (ids are FreeRec's contiguous integer encodings, not reviewer ids / ASINs). Sequences are built by timestamp; ties keep file order.
 - Item text = `title + categories + brand` (no description or review text in this version), truncated to about 128 tokens.
 - Evaluation: full-catalog ranking over 12,101 items; history items are not filtered.
 - Temporal hold-out for LLM inputs: profiles use only `i_1 .. i_{n-2-h}` (h = 3). The last h training items are consistency probes. Valid/test items **never** enter any LLM prompt (`tests/test_no_leakage.py`).

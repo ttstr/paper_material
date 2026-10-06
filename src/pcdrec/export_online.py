@@ -109,7 +109,7 @@ def export(checkpoint: str, out_dir: str) -> dict:
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--out-dir", default="/workspace/pcdrec/results/online_export")
+    ap.add_argument("--out-dir", default="results/online_export")
     args = ap.parse_args(argv)
     meta = export(args.checkpoint, args.out_dir)
     print(json.dumps(meta, indent=2))

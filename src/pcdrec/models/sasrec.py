@@ -148,6 +148,18 @@ class SASRec(nn.Module):
         bias = bias.masked_fill(block.unsqueeze(1), -1e4)
         return bias, pad_mask
 
+    def embed_items(self, item_seq: torch.Tensor) -> torch.Tensor:
+        """Input item representation (overridden by SASRec-T)."""
+        return self.item_emb(item_seq)
+
+    def output_item_weights(self) -> torch.Tensor:
+        """[n_items, H] output item matrix (tied with the input embedding)."""
+        return self.item_emb.weight[:-1]
+
+    def score(self, users: torch.Tensor | None, item_seq: torch.Tensor) -> torch.Tensor:
+        """Unified scorer used by the shared evaluator (users unused for sequential models)."""
+        return self.predict_logits(item_seq)
+
     def forward(self, item_seq: torch.Tensor) -> torch.Tensor:
         """
         item_seq: [B, L] long, left-padded with pad_id; recent items at the end.
@@ -156,7 +168,7 @@ class SASRec(nn.Module):
         B, L = item_seq.shape
         device = item_seq.device
         positions = torch.arange(L, device=device).unsqueeze(0).expand(B, -1)
-        x = self.item_emb(item_seq) + self.pos_emb(positions)
+        x = self.embed_items(item_seq) + self.pos_emb(positions)
         x = self.emb_dropout(x)
         attn_bias, pad_mask = self._attn_bias(item_seq)
         x = x * pad_mask.unsqueeze(-1).to(x.dtype)
@@ -184,13 +196,13 @@ class SASRec(nn.Module):
     def predict_logits(self, item_seq: torch.Tensor) -> torch.Tensor:
         """Full-catalog logits [B, n_items]."""
         u = self.user_representation(item_seq)
-        w = self.item_emb.weight[:-1]
+        w = self.output_item_weights()
         return u @ w.t()
 
     def train_step_logits(self, seq_in: torch.Tensor) -> torch.Tensor:
         """logits [B, L, n_items] for each position."""
         h = self.forward(seq_in)
-        w = self.item_emb.weight[:-1]
+        w = self.output_item_weights()
         return h @ w.t()
 
     def num_parameters(self, trainable_only: bool = True) -> int:

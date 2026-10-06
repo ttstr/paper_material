@@ -11,9 +11,19 @@ __pycache__/
 *.key
 .DS_Store
 
-# --- data: never commit raw / processed data (user-provided Beauty LOO) ---
+# --- data: never commit raw / processed data (RecBoard Amazon2014Beauty_550_LOU) ---
 data/processed/
 data/raw/
+data/recboard_build/
+.freerec-venv/
+*.zip
+*.zip.part
+*.inter
+*.item
+*.npy
+*.safetensors
+*.bin
+*.gguf
 **/amazon-beauty/
 train.txt
 valid.txt
@@ -39,8 +49,15 @@ results/*.csv
 !results/main_table_sasrec_full.csv
 !results/sasrec_full_s*_metrics.json
 !results/sasrec_full_s*_metrics.csv
+!results/main_table_beauty.csv
+!results/*_s4[2-6]_metrics.json
+!results/*_s4[2-6]_metrics.csv
+!results/search_summary.csv
+results/llm_cache/
+results/pilot/**/raw/
 
 # --- logs: ignore by default, keep only the small per-seed full-run training logs ---
 *.log
 logs/*
 !logs/sasrec_full_s*.log
+!logs/*_s4[2-6].log

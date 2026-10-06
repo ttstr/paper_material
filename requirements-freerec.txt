@@ -1,0 +1,7 @@
+# Isolated environment for the data build ONLY (scripts/00_build_beauty_from_raw.sh).
+# Training/evaluation does not need FreeRec. torch (CPU wheel is enough) is installed by the script.
+freerec==0.9.7
+pandas==2.3.3
+numpy==2.5.0
+polars==1.44.2
+# FreeRec also needs torchdata==0.7.0, installed with --no-deps (as `python -m freerec setup` does)

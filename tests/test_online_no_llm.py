@@ -10,7 +10,7 @@ import torch
 from pcdrec.export_online import export
 from pcdrec.models.sasrec import SASRec
 
-REPO = Path("/workspace/pcdrec")
+from pcdrec.paths import REPO_ROOT as REPO
 CKPT_CANDIDATES = [
     REPO / "results/checkpoints/sasrec_subset1000_best.pt",
     REPO / "results/checkpoints/sasrec_subset500_best.pt",

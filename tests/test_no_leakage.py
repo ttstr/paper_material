@@ -10,10 +10,11 @@ from pcdrec.data.leakage_check import (
     collect_valid_test_targets,
     train_prefix_for_profile,
 )
-from pcdrec.data.load_splits import load_and_process, load_processed
+from pcdrec.data.load_splits import load_and_process, load_data_config, load_processed
+from pcdrec.paths import REPO_ROOT
 
-DATA_CFG = "/workspace/pcdrec/configs/data/beauty.yaml"
-PROCESSED = Path("/workspace/pcdrec/data/processed/beauty")
+DATA_CFG = str(REPO_ROOT / "configs/data/beauty.yaml")
+PROCESSED = Path(load_data_config(DATA_CFG)["processed_dir"])
 HOLDOUT_H = 3
 
 

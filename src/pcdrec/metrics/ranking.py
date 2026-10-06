@@ -62,3 +62,24 @@ def metrics_from_score_matrix(
     """scores: [B, n_items]; targets: length B."""
     ranks = [ranks_from_scores(scores[i], int(targets[i])) for i in range(len(targets))]
     return evaluate_ranks(ranks, ks)
+
+
+def ranks_from_score_matrix(scores, targets):
+    """Vectorised 1-based ranks; identical tie rule to ``ranks_from_scores`` (ties count against target).
+
+    scores: torch.Tensor [B, N] (finite); targets: LongTensor [B]. Returns LongTensor [B].
+    """
+    import torch
+
+    t = scores.gather(1, targets.view(-1, 1))
+    better = (scores > t).sum(1)
+    ties = (scores == t).sum(1) - 1
+    return better + ties.clamp(min=0) + 1
+
+
+def per_user_metrics(ranks, k: int = 10) -> dict:
+    """Per-user HR@k / NDCG@k arrays from 1-based ranks (numpy)."""
+    r = np.asarray(ranks, dtype=np.float64)
+    hit = (r <= k).astype(np.float64)
+    ndcg = np.where(r <= k, 1.0 / np.log2(r + 1.0), 0.0)
+    return {f"hr@{k}": hit, f"ndcg@{k}": ndcg}

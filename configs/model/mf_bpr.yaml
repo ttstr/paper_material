@@ -1,0 +1,17 @@
+model: mf_bpr
+hidden_size: 64
+initializer_range: 0.1
+l2: 0.0001                # lambda/2 * ||.||^2 on batch embeddings (searched)
+optim:
+  lr: 0.001
+  weight_decay: 0.0
+  batch_size: 4096
+  epochs: 300
+  patience: 20
+  num_workers: 0
+seed: 42
+device: auto
+threads: null
+max_users: null
+checkpoint_dir: results/checkpoints
+results_dir: results

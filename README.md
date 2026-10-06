@@ -9,55 +9,72 @@
 ## 环境
 
 ```bash
-cd /workspace/pcdrec
+git clone https://github.com/ttstr/paper_material.git pcdrec && cd pcdrec
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -U pip
 pip install torch --index-url https://download.pytorch.org/whl/cpu   # 无 GPU 时
 pip install -r requirements.txt
-export PYTHONPATH=/workspace/pcdrec/src
+export PYTHONPATH=$PWD/src
+# 精确复现环境：pip install -r requirements-lock.txt（pip freeze 生成，Python 3.13.5）
 ```
 
 当前本机探测（安装后实测）：
 
 | 项 | 值 |
 |---|---|
-| Python | 3.13 |
+| Python | 3.13.5 |
 | torch | 2.14.1+cpu |
 | `torch.cuda.is_available()` | **False**（无 GPU） |
 
-有 GPU 时安装对应 CUDA wheel，`configs/model/sasrec.yaml` 中 `device: auto` 即可。
+有 GPU 时安装对应 CUDA wheel，`configs/model/*.yaml` 中 `device: auto` 即可。
 
-## 数据路径（不入库）
+## 数据（不入库；一键从官方来源重建）
 
-原始 TSV **不复制进仓库**，只通过配置 / 符号链接指向：
+数据为 **RecBoard 的 `Amazon2014Beauty_550_LOU`**：由 **FreeRec 0.9.7** 原版 CLI 从 Zenodo 上的 RecBoard/FreeRec Atomic 包
+（`Amazon2014Beauty.zip`，record 10995912，MD5 `ed0f0cfe2c44bbed899ca3da3aaf2918`）构建：
 
 ```
-/workspace/pcdrec-data/amazon-beauty/
-  train.txt  valid.txt  test.txt  item_meta.txt  README.md  manifest.json
+freerec make Amazon2014Beauty --root <dir> --kcore4user 5 --kcore4item 5 --splitting LOU
 ```
 
-- 用户 22363；train 153776；valid/test 各 22363（每用户 1 条 LOO）
-- meta 12101 物品；ID 从 0 连续重映射；评测默认**全库排序**
-- 文本字段：`title + categories + brand`（无 description）
-- 加载时校验 `manifest.json` 的 sha256 与行数
+（用户/物品 5-core、评分阈值 0、按用户时间留一：最后一条 test、倒数第二条 valid。）FreeRec 输出的
+`train/valid/test/item.txt` 即本仓的 `train/valid/test/item_meta.txt`。
+
+**一键重建 + sha256 校验**（自动建独立 FreeRec 环境 `.freerec-venv`、下载 Zenodo 包并校验 MD5/SHA256、运行 FreeRec、审计切分、写 `manifest.json` / `build_info.json`，sha256 与参考值不一致即失败）：
 
 ```bash
-bash scripts/00_link_user_data.sh
-bash scripts/01_load_splits.sh
+bash scripts/00_build_beauty_from_raw.sh                       # 输出到 data/raw/amazon-beauty（默认）
+PCDREC_DATA_DIR=/path/to/beauty bash scripts/00_build_beauty_from_raw.sh   # 自定义输出目录
+bash scripts/00_build_beauty_from_raw.sh --archive /path/Amazon2014Beauty.zip # 离线：用本地 zip
 ```
 
-处理后产物（本地，已 gitignore）：`data/processed/beauty/`。
+本机已实测：从 Zenodo 下载 → FreeRec 0.9.7 → 四个文件与实验所用文件 **sha256 逐字节一致**（参考文件在 Windows 上生成，
+记录分隔符为 CRLF；脚本默认 `--line-endings crlf` 复现之，`--line-endings lf` 输出 Linux 原生换行，两套参考哈希都内置校验）。
+脚本：`scripts/00_build_beauty_from_raw.sh`（入口）+ `scripts/data_build/build_beauty_from_recboard.py`（仅标准库；改编自本项目作者最初的数据准备脚本
+`build_recboard_data.py` / `prepare_data.py`，不重写任何过滤/切分逻辑）。依赖版本见 `requirements-freerec.txt`。
+
+数据路径**可配置**：`configs/data/beauty.yaml` 中均为仓库相对路径（默认 `data/raw/amazon-beauty`、`data/processed/beauty`）；
+环境变量 `PCDREC_DATA_DIR` 覆盖原始数据目录，`PCDREC_PROCESSED_DIR` 覆盖处理缓存目录。已有数据目录也可用
+`PCDREC_DATA_DIR=/path bash scripts/00_link_user_data.sh` 软链到默认位置。
+
+- 用户 22363；物品 12101；交互 198502（train 153776；valid/test 各 22363，每用户 1 条）
+- ID 为 FreeRec 编码的连续整数（非原始 reviewer id / ASIN）；评测默认**全库排序**
+- 文本字段：`title + categories + brand`（无 description）
+- 加载时再次校验 `manifest.json` 的 sha256 与行数；处理后产物（本地，已 gitignore）：`data/processed/beauty/`
+
+```bash
+bash scripts/01_load_splits.sh
+```
 
 ## 一键命令
 
 ```bash
-cd /workspace/pcdrec
 source .venv/bin/activate
-export PYTHONPATH=/workspace/pcdrec/src
+export PYTHONPATH=$PWD/src
 
-# 1) 链接数据 + 校验/导出 processed
-bash scripts/00_link_user_data.sh
+# 1) 重建数据（或 PCDREC_DATA_DIR 指向已有目录）+ 校验/导出 processed
+bash scripts/00_build_beauty_from_raw.sh
 bash scripts/01_load_splits.sh
 
 # 2) 单元测试

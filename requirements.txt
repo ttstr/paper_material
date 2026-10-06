@@ -1,3 +1,4 @@
+# Lower bounds; exact versions in requirements-lock.txt (Python 3.13.5).
 torch>=2.1.0
 numpy>=1.24
 pandas>=2.0
@@ -5,3 +6,7 @@ pyyaml>=6.0
 tqdm>=4.65
 pytest>=7.0
 pyarrow>=14.0
+scipy>=1.10                   # paired significance tests
+sentence-transformers>=3.0    # frozen item-text / claim encoder (SASRec-T, PCS, L_pref)
+transformers>=4.45            # offline LLM (local backend) + NLI model for PCS grounding
+accelerate>=0.30
